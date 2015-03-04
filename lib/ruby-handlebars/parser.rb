@@ -1,3 +1,4 @@
+require 'pry'
 require 'parslet'
 
 module Handlebars
@@ -31,6 +32,18 @@ module Handlebars
 
     rule(:helper) { docurly >> space? >> identifier.as(:helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly}
 
+    rule(:block_helper) {
+      docurly >>
+      hash >>
+      identifier.capture(:helper_name).as(:helper_name) >>
+      (space >> parameters.as(:parameters)).maybe >>
+      dccurly >>
+      block.as(:helper_block) >>
+      dynamic { |src,scope|
+        docurly >> slash >> str(scope.captures[:helper_name]) >> dccurly
+      }
+    }
+
     rule(:partial) {
       docurly >> 
       gt >> 
@@ -40,46 +53,7 @@ module Handlebars
       dccurly
     }
 
-    rule(:each_block) {
-      docurly >>
-      str('#each') >>
-      space >>
-      (
-        identifier.as(:itered_item_name) >>
-        space >>
-        str('in') >>
-        space
-      ).maybe >>
-      path.as(:itered_items) >>
-      space? >>
-      dccurly >>
-      block.as(:iteration_block) >>
-      docurly >>
-      str('/each') >>
-      dccurly
-    }
-
-    rule(:else_kw) {str('else')}
-    rule(:if_block) {
-      docurly >>
-      str('#if') >>
-      space >>
-      path.as(:condition) >>
-      space? >>
-      dccurly >>
-      block.as(:if_body) >>
-      (
-        docurly >>
-        else_kw >>
-        dccurly >>
-        block.as(:else_body)
-      ).maybe >>
-      docurly >>
-      str('/if') >>
-      dccurly
-    }
-
-    rule(:block) { (template_content | replacement | safe_replacement | helper | partial | each_block | if_block ).repeat }
+    rule(:block) { (template_content | replacement | safe_replacement | helper | partial | block_helper ).repeat }
 
     root :block
   end

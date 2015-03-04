@@ -39,36 +39,46 @@ describe Handlebars::Parser do
       end
 
       it 'block' do
-        expect(parser.parse('{{#capitalize}}plic{{/capitalize}}')).to eq([])
+        expect(parser.parse('{{#capitalize}}plic{{/capitalize}}')).to eq([{
+          helper_name: 'capitalize',
+          helper_block: [{content: 'plic'}]
+        }])
       end
 
       it 'block with parameters' do
-        expect(parser.parse('{{#comment "#"}}plic{{/comment}}')).to eq([])
+        expect(parser.parse('{{#comment "#"}}plic{{/comment}}')).to eq([{
+          helper_name: 'comment',
+          parameters: {parameter_name: {content: '#'}},
+          helper_block: [{content: 'plic'}]
+        }])
       end
     end
 
     context 'if block' do
       it 'simple' do
         expect(parser.parse('{{#if something}}show something else{{/if}}')).to eq([{
-          condition: 'something',
-          if_body: [{content: 'show something else'}]
+          helper_name: 'if',
+          parameters: {parameter_name: 'something'},
+          helper_block: [{content: 'show something else'}]
         }])
       end
 
       it 'with an else statement' do
         expect(parser.parse('{{#if something}}Ok{{else}}not ok{{/if}}')).to eq([{
-          condition: 'something',
-          if_body: [{content: 'Ok'}],
-          else_body: [{content: 'not ok'}]
+          helper_name: 'if',
+          parameters: {parameter_name: 'something'},
+          helper_block: [{content: 'Ok'}, {item: 'else'}, {content: 'not ok'}]
         }])
       end
 
       it 'imbricated' do
         expect(parser.parse('{{#if something}}{{#if another_thing}}Plic{{/if}}ploc{{/if}}')).to eq([{
-          condition: 'something',
-          if_body: [{
-            condition: 'another_thing',
-            if_body: [{content: 'Plic'}]
+          helper_name: 'if',
+          parameters: {parameter_name: 'something'},
+          helper_block: [{
+            helper_name: 'if',
+            parameters: {parameter_name: 'another_thing'},
+            helper_block: [{content: 'Plic'}]
           }, {content: 'ploc'}]
         }])
       end
@@ -77,30 +87,34 @@ describe Handlebars::Parser do
     context 'each block' do
       it 'simple' do
         expect(parser.parse('{{#each people}} {{this.name}} {{/each}}')).to eq([{
-          itered_items: 'people',
-          iteration_block: [{content: ' '}, {item: 'this.name'}, {content: ' '}]
+          helper_name: 'each',
+          parameters: {parameter_name: 'people'},
+          helper_block: [{content: ' '}, {item: 'this.name'}, {content: ' '}]
         }])
       end
 
       it 'with naming' do
         expect(parser.parse('{{#each p in people}} {{p.name}} {{/each}}')).to eq([{
-          itered_items: 'people',
-          itered_item_name: 'p',
-          iteration_block: [{content: ' '}, {item: 'p.name'}, {content: ' '}]
+          helper_name: 'each',
+          parameters: [{parameter_name: 'p'}, {parameter_name: 'in'}, {parameter_name: 'people'}],
+          helper_block: [{content: ' '}, {item: 'p.name'}, {content: ' '}]
         }])
       end
 
       it 'imbricated' do
-        expect(parser.parse('{{#each people}} {{this.name}} {{#each this.contact}} {{this}} {{/each}}{{/each}}')).to eq([{
-          itered_items: 'people',
-          iteration_block: [
+        expect(parser.parse('{{#each people}} {{this.name}} <ul> {{#each this.contact}} <li>{{this}}</li> {{/each}}</ul>{{/each}}')).to eq([{
+          helper_name: 'each',
+          parameters: {parameter_name: 'people'},
+          helper_block: [
             {content: ' '},
             {item: 'this.name'},
-            {content: ' '},
+            {content: ' <ul> '},
             {
-              itered_items: 'this.contact',
-              iteration_block: [{content: ' '}, {item: 'this'}, {content: ' '}]
-            }
+              helper_name: 'each',
+              parameters: {parameter_name: 'this.contact'},
+              helper_block: [{content: ' <li>'}, {item: 'this'}, {content: '</li> '}]
+            },
+            {content: '</ul>'}
           ]
         }])
       end
