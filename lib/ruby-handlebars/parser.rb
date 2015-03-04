@@ -18,13 +18,13 @@ module Handlebars
     rule(:identifier)  { match['a-zA-Z0-9_'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
-    rule(:template_content) { match('[^{}]').repeat(1).as(:content) }
+    rule(:template_content) { match('[^{}]').repeat(1).as(:template_content) }
 
-    rule(:replacement) { docurly >> space? >> path.as(:item) >> space? >> dccurly}
+    rule(:replacement) { docurly >> space? >> path.as(:replaced_item) >> space? >> dccurly}
     rule(:safe_replacement) { ocurly >> replacement >> ccurly }
 
-    rule(:sq_string)   { match("'") >> match("[^']").repeat(1).as(:content) >> match("'") }
-    rule(:dq_string)   { match('"') >> match('[^"]').repeat(1).as(:content) >> match('"') }
+    rule(:sq_string)   { match("'") >> match("[^']").repeat(1).as(:str_content) >> match("'") }
+    rule(:dq_string)   { match('"') >> match('[^"]').repeat(1).as(:str_content) >> match('"') }
     rule(:string)      { sq_string | dq_string }
 
     rule(:parameter)   { (path | string).as(:parameter_name) }

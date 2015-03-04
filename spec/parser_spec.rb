@@ -6,21 +6,21 @@ describe Handlebars::Parser do
 
   context 'recognizes' do
     it 'simple templates' do
-      expect(parser.parse('Ho hi !')).to eq([{content: 'Ho hi !'}])
+      expect(parser.parse('Ho hi !')).to eq([{template_content: 'Ho hi !'}])
     end
 
     it 'simple replacements' do
-      expect(parser.parse('{{plic}}')).to eq([{item: 'plic'}])
-      expect(parser.parse('{{ plic}}')).to eq([{item: 'plic'}])
-      expect(parser.parse('{{plic }}')).to eq([{item: 'plic'}])
-      expect(parser.parse('{{ plic }}')).to eq([{item: 'plic'}])
+      expect(parser.parse('{{plic}}')).to eq([{replaced_item: 'plic'}])
+      expect(parser.parse('{{ plic}}')).to eq([{replaced_item: 'plic'}])
+      expect(parser.parse('{{plic }}')).to eq([{replaced_item: 'plic'}])
+      expect(parser.parse('{{ plic }}')).to eq([{replaced_item: 'plic'}])
     end
 
     it 'safe strings' do
-      expect(parser.parse('{{{plic}}}')).to eq([{item: 'plic'}])
-      expect(parser.parse('{{{ plic}}}')).to eq([{item: 'plic'}])
-      expect(parser.parse('{{{plic }}}')).to eq([{item: 'plic'}])
-      expect(parser.parse('{{{ plic }}}')).to eq([{item: 'plic'}])
+      expect(parser.parse('{{{plic}}}')).to eq([{replaced_item: 'plic'}])
+      expect(parser.parse('{{{ plic}}}')).to eq([{replaced_item: 'plic'}])
+      expect(parser.parse('{{{plic }}}')).to eq([{replaced_item: 'plic'}])
+      expect(parser.parse('{{{ plic }}}')).to eq([{replaced_item: 'plic'}])
     end
 
     context 'helpers' do
@@ -41,17 +41,22 @@ describe Handlebars::Parser do
       it 'block' do
         expect(parser.parse('{{#capitalize}}plic{{/capitalize}}')).to eq([{
           helper_name: 'capitalize',
-          helper_block: [{content: 'plic'}]
+          helper_block: [{template_content: 'plic'}]
         }])
       end
 
       it 'block with parameters' do
         expect(parser.parse('{{#comment "#"}}plic{{/comment}}')).to eq([{
           helper_name: 'comment',
-          parameters: {parameter_name: {content: '#'}},
-          helper_block: [{content: 'plic'}]
+          parameters: {parameter_name: {str_content: '#'}},
+          helper_block: [{template_content: 'plic'}]
         }])
       end
+
+      it 'imbricated blocks' do
+        expect(parser.parse('{{#comment "#"}}plic {{#capitalize}}plic{{/capitalize}}{{/comment}}')).to eq([])
+      end
+
     end
 
     context 'if block' do
@@ -59,7 +64,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{#if something}}show something else{{/if}}')).to eq([{
           helper_name: 'if',
           parameters: {parameter_name: 'something'},
-          helper_block: [{content: 'show something else'}]
+          helper_block: [{template_content: 'show something else'}]
         }])
       end
 
@@ -67,7 +72,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{#if something}}Ok{{else}}not ok{{/if}}')).to eq([{
           helper_name: 'if',
           parameters: {parameter_name: 'something'},
-          helper_block: [{content: 'Ok'}, {item: 'else'}, {content: 'not ok'}]
+          helper_block: [{template_content: 'Ok'}, {replaced_item: 'else'}, {template_content: 'not ok'}]
         }])
       end
 
@@ -78,8 +83,8 @@ describe Handlebars::Parser do
           helper_block: [{
             helper_name: 'if',
             parameters: {parameter_name: 'another_thing'},
-            helper_block: [{content: 'Plic'}]
-          }, {content: 'ploc'}]
+            helper_block: [{template_content: 'Plic'}]
+          }, {template_content: 'ploc'}]
         }])
       end
     end
@@ -89,7 +94,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{#each people}} {{this.name}} {{/each}}')).to eq([{
           helper_name: 'each',
           parameters: {parameter_name: 'people'},
-          helper_block: [{content: ' '}, {item: 'this.name'}, {content: ' '}]
+          helper_block: [{template_content: ' '}, {replaced_item: 'this.name'}, {template_content: ' '}]
         }])
       end
 
@@ -97,7 +102,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{#each p in people}} {{p.name}} {{/each}}')).to eq([{
           helper_name: 'each',
           parameters: [{parameter_name: 'p'}, {parameter_name: 'in'}, {parameter_name: 'people'}],
-          helper_block: [{content: ' '}, {item: 'p.name'}, {content: ' '}]
+          helper_block: [{template_content: ' '}, {replaced_item: 'p.name'}, {template_content: ' '}]
         }])
       end
 
@@ -106,15 +111,15 @@ describe Handlebars::Parser do
           helper_name: 'each',
           parameters: {parameter_name: 'people'},
           helper_block: [
-            {content: ' '},
-            {item: 'this.name'},
-            {content: ' <ul> '},
+            {template_content: ' '},
+            {replaced_item: 'this.name'},
+            {template_content: ' <ul> '},
             {
               helper_name: 'each',
               parameters: {parameter_name: 'this.contact'},
-              helper_block: [{content: ' <li>'}, {item: 'this'}, {content: '</li> '}]
+              helper_block: [{template_content: ' <li>'}, {replaced_item: 'this'}, {template_content: '</li> '}]
             },
-            {content: '</ul>'}
+            {template_content: '</ul>'}
           ]
         }])
       end
