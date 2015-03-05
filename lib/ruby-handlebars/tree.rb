@@ -1,13 +1,29 @@
+require 'colorize'
+
 module Handlebars
   module Tree
-    class TemplateContent < Struct.new(:content)
+    class TreeItem < Struct
       def eval(context)
+        _eval(context)
+      rescue Exception => err
+        puts "Unable to _evaluate #{self} with context #{context}".white
+
+        line = "-" * 80
+        puts line.yellow
+        puts "#{exception.class.name}: #{exception.message}".red
+        puts "#{exception.backtrace.map {|l| "  #{l}\n"}.join}".yellow
+        puts line.yellow
+      end
+    end
+
+    class TemplateContent < TreeItem.new(:content)
+      def _eval(context)
         return content
       end
     end
 
-    class Replacement < Struct.new(:item)
-      def eval(context)
+    class Replacement < TreeItem.new(:item)
+      def _eval(context)
         if context.get_helper(item.to_s).nil?
           context.get(item.to_s)
         else
@@ -20,39 +36,39 @@ module Handlebars
       end
     end
 
-    class String < Struct.new(:content)
-      def eval(context)
+    class String < TreeItem.new(:content)
+      def _eval(context)
         return content
       end
     end
 
-    class Parameter < Struct.new(:name)
-      def eval(context)
+    class Parameter < TreeItem.new(:name)
+      def _eval(context)
         if name.is_a?(Parslet::Slice)
           context.get(name.to_s)
         else
-          name.eval(context)
+          name._eval(context)
         end
       end
     end
 
-    class Helper < Struct.new(:name, :parameters, :block)
-      def eval(context)
+    class Helper < TreeItem.new(:name, :parameters, :block)
+      def _eval(context)
         context.get_helper(name.to_s).apply(context, parameters, block)
       end
     end
 
-    class Partial < Struct.new(:partial_name)
-      def eval(context)
+    class Partial < TreeItem.new(:partial_name)
+      def _eval(context)
         context.get_partial(partial_name.to_s).call(context)
       end
     end
 
-    class Block < Struct.new(:items)
-      def eval(context)
-        items.map {|item| item.eval(context)}.join()
+    class Block < TreeItem.new(:items)
+      def _eval(context)
+        items.map {|item| item._eval(context)}.join()
       end
-      alias :fn :eval
+      alias :fn :_eval
 
       def add_item(i)
         items << i

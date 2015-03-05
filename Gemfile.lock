@@ -7,6 +7,7 @@ GEM
     codeclimate-test-reporter (0.4.7)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
+    colorize (0.7.5)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
@@ -84,6 +85,7 @@ PLATFORMS
 
 DEPENDENCIES
   codeclimate-test-reporter (~> 0.4, >= 0.4.6)
+  colorize (~> 0.7, >= 0.7.5)
   jeweler (~> 2.0, >= 2.0.1)
   parslet
   pry
