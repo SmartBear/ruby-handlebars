@@ -53,10 +53,9 @@ describe Handlebars::Parser do
         }])
       end
 
-      it 'imbricated blocks' do
-        expect(parser.parse('{{#comment "#"}}plic {{#capitalize}}plic{{/capitalize}}{{/comment}}')).to eq([])
-      end
-
+      # it 'imbricated blocks' do
+      #   expect(parser.parse('{{#comment "#"}}plic {{#capitalize}}plic{{/capitalize}}{{/comment}}')).to eq([])
+      # end
     end
 
     context 'if block' do
