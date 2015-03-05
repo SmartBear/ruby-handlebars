@@ -29,7 +29,13 @@ module Handlebars
         end
       end
 
-      p.instance_variable_get("@#{attribute}")
+      if item.instance_variables.include?("@#{attribute}")
+        return item.instance_variable_get("@#{attribute}")
+      end
+
+      if item.respond_to?(sym_attr)
+        return item.send(sym_attr)
+      end
     end
   end
 end

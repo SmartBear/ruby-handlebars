@@ -18,19 +18,19 @@ module Handlebars
     end
 
     def register_helper(name, &fn)
-      @helpers[name] = Helper.new(self, fn)
+      @helpers[name.to_s] = Helper.new(self, fn)
     end
 
     def get_helper(name)
-      @helpers[name]
+      @helpers[name.to_s]
     end
 
     def register_partial(name, content)
-      @partials[name] = Template.new(self, template_to_ast(content))
+      @partials[name.to_s] = Template.new(self, template_to_ast(content))
     end
 
     def get_partial(name)
-      @partials[name]
+      @partials[name.to_s]
     end
 
     def set_context(ctx)
@@ -49,6 +49,8 @@ module Handlebars
 
     def register_if_helper
       register_helper('if') do |context, condition, block, else_block|
+        condition = !condition.empty? if condition.respond_to?(:empty?)
+
         if condition
           block.fn(context)
         elsif else_block

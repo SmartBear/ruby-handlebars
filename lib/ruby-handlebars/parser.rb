@@ -15,7 +15,7 @@ module Handlebars
     rule(:docurly)     { ocurly >> ocurly }
     rule(:dccurly)     { ccurly >> ccurly }
 
-    rule(:identifier)  { match['a-zA-Z0-9_'].repeat(1) }
+    rule(:identifier)  { match['a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
     rule(:template_content) { match('[^{}]').repeat(1).as(:template_content) }
@@ -30,13 +30,17 @@ module Handlebars
     rule(:parameter)   { (path | string).as(:parameter_name) }
     rule(:parameters)  { parameter >> (space >> parameter).repeat }
 
-    rule(:helper) { docurly >> space? >> identifier.as(:helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly}
+    rule(:unsafe_helper) { docurly >> space? >> identifier.as(:helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly}
+    rule(:safe_helper) { ocurly >> helper >> ccurly }
+
+    rule(:helper) { unsafe_helper | safe_helper }
 
     rule(:block_helper) {
       docurly >>
       hash >>
       identifier.capture(:helper_name).as(:helper_name) >>
       (space >> parameters.as(:parameters)).maybe >>
+      space? >>
       dccurly >>
       scope {
         block
