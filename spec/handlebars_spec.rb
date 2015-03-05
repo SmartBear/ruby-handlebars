@@ -92,6 +92,11 @@ describe Handlebars::Handlebars do
           "</tr>"
         ].join("\n"))
       end
+
+      it 'block parameters can be paths' do
+        data = {company: {people: ['a', 'b', 'c']}}
+        expect(evaluate("{{#each company.people}}{{{this}}}{{/each}}", data)).to eq('abc')
+      end
     end
 
     context 'default helpers' do
