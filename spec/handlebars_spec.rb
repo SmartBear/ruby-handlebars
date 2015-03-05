@@ -51,7 +51,7 @@ describe Handlebars::Handlebars do
         expect(evaluate("{{add left '&' right}}", {left: 'Law', right: 'Order'})).to eq("Law & Order")
       end
 
-      it 'with a block' do
+      it 'block' do
         hbs.register_helper('comment') do |context, commenter, block|
           block.fn(context).split("\n").map do |line|
             "#{commenter} #{line}"
@@ -67,6 +67,30 @@ describe Handlebars::Handlebars do
           "// Date: today"
         ].join("\n"))
         end
+      end
+
+      it 'block without arguments' do
+        template = [
+          "<tr>{{#indent}}",
+          "{{#each items}}<td>{{{ this }}}</td>",
+          "{{/each}}",
+          "{{/indent}}",
+          "</tr>"
+        ].join("\n")
+
+        hbs.register_helper('indent') do |context, block|
+          block.fn(context).split("\n").map do |line|
+            "  #{line}"
+          end.join("\n")
+        end
+
+        expect(evaluate(template, {items: ['a', 'b', 'c']})).to eq([
+          "<tr>  ",
+          "  <td>a</td>",
+          "  <td>b</td>",
+          "  <td>c</td>",
+          "</tr>"
+        ].join("\n"))
       end
     end
 

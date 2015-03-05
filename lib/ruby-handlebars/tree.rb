@@ -9,10 +9,7 @@ module Handlebars
         puts "Unable to _evaluate #{self} with context #{context}".white
 
         line = "-" * 80
-        puts line.yellow
-        puts "#{exception.class.name}: #{exception.message}".red
-        puts "#{exception.backtrace.map {|l| "  #{l}\n"}.join}".yellow
-        puts line.yellow
+        raise exception.class, exception.message
       end
     end
 
@@ -82,8 +79,27 @@ module Handlebars
     rule(str_content: simple(:content)) {Tree::String.new(content)}
     rule(parameter_name: simple(:name)) {Tree::Parameter.new(name)}
 
-    rule(helper_name: simple(:name), parameters: subtree(:parameters)) {Tree::Helper.new(name, parameters)}
-    rule(helper_name: simple(:name), parameters: subtree(:parameters), block_items: subtree(:helper_block)) {Tree::Helper.new(name, parameters, helper_block)}
+    rule(
+      helper_name: simple(:name),
+      parameters: subtree(:parameters)
+    ) {
+      Tree::Helper.new(name, parameters)
+    }
+
+    rule(
+      helper_name: simple(:name),
+      block_items: subtree(:block_items)
+    ) {
+      Tree::Helper.new(name, [], block_items)
+    }
+
+    rule(
+      helper_name: simple(:name),
+      parameters: subtree(:parameters),
+      block_items: subtree(:block_items)
+    ) {
+      Tree::Helper.new(name, parameters, block_items)
+    }
 
     rule(partial_name: simple(:partial_name)) {Tree::Partial.new(partial_name)}
     rule(block_items: subtree(:block_items)) {Tree::Block.new(block_items)}
