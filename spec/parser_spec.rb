@@ -98,14 +98,6 @@ describe Handlebars::Parser do
         }])
       end
 
-      it 'with naming' do
-        expect(parser.parse('{{#each p in people}} {{p.name}} {{/each}}')).to eq([{
-          helper_name: 'each',
-          parameters: [{parameter_name: 'p'}, {parameter_name: 'in'}, {parameter_name: 'people'}],
-          helper_block: [{template_content: ' '}, {replaced_item: 'p.name'}, {template_content: ' '}]
-        }])
-      end
-
       it 'imbricated' do
         expect(parser.parse('{{#each people}} {{this.name}} <ul> {{#each this.contact}} <li>{{this}}</li> {{/each}}</ul>{{/each}}')).to eq([{
           helper_name: 'each',

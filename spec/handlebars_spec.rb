@@ -69,5 +69,161 @@ describe Handlebars::Handlebars do
         end
       end
     end
+
+    context 'default helpers' do
+      context 'if' do
+        it 'without else' do
+          template = [
+            "{{#if condition}}",
+            "  Show something",
+            "{{/if}}"
+          ].join("\n")
+          expect(evaluate(template, {condition: true})).to eq("\n  Show something\n")
+          expect(evaluate(template, {condition: false})).to eq("")
+        end
+
+        it 'with an else' do
+          template = [
+            "{{#if condition}}",
+            "  Show something",
+            "{{ else }}",
+            "  Do not show something",
+            "{{/if}}"
+          ].join("\n")
+          expect(evaluate(template, {condition: true})).to eq("\n  Show something\n")
+          expect(evaluate(template, {condition: false})).to eq("\n  Do not show something\n")
+        end
+
+        it 'imbricated ifs' do
+          template = [
+            "{{#if first_condition}}",
+            "  {{#if second_condition}}",
+            "    Case 1",
+            "  {{else}}",
+            "    Case 2",
+            "  {{/if}}",
+            "{{else}}",
+            "  {{#if second_condition}}",
+            "    Case 3",
+            "  {{else}}",
+            "    Case 4",
+            "  {{/if}}",
+            "{{/if}}"
+          ].join("\n")
+
+          expect(evaluate(template, {first_condition: true, second_condition: true}).strip).to eq("Case 1")
+          expect(evaluate(template, {first_condition: true, second_condition: false}).strip).to eq("Case 2")
+          expect(evaluate(template, {first_condition: false, second_condition: true}).strip).to eq("Case 3")
+          expect(evaluate(template, {first_condition: false, second_condition: false}).strip).to eq("Case 4")
+        end
+      end
+
+      context 'each' do
+        let(:ducks) {[{name: 'Huey'}, {name: 'Dewey'}, {name: 'Louis'}]}
+
+        it 'simple case' do
+          template = [
+            "<ul>",
+            "{{#each items}}  <li>{{this.name}}</li>",
+            "{{/each}}</ul>"
+          ].join("\n")
+
+          data = {items: ducks}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "  <li>Huey</li>",
+            "  <li>Dewey</li>",
+            "  <li>Louis</li>",
+            "</ul>"
+          ].join("\n"))
+
+          data = {items: []}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "</ul>"
+          ].join("\n"))
+        end
+
+        it 'using an else statement' do
+          template = [
+            "<ul>",
+            "{{#each items}}  <li>{{this.name}}</li>",
+            "{{else}}  <li>No ducks to display</li>",
+            "{{/each}}</ul>"
+          ].join("\n")
+
+          data = {items: ducks}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "  <li>Huey</li>",
+            "  <li>Dewey</li>",
+            "  <li>Louis</li>",
+            "</ul>"
+          ].join("\n"))
+
+          data = {items: []}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "  <li>No ducks to display</li>",
+            "</ul>"
+          ].join("\n"))
+        end
+
+        it 'imbricated' do
+          data = {people: [
+            {
+              name: 'Huey',
+              email: 'huey@junior-woodchucks.example.com',
+              phones: ['1234', '5678'],
+            },
+            {
+              name: 'Dewey',
+              email: 'dewey@junior-woodchucks.example.com',
+              phones: ['4321'],
+            }
+          ]}
+
+          template = [
+            "People:",
+            "<ul>",
+            "  {{#each people}}",
+            "  <li>",
+            "    <ul>",
+            "      <li>Name: {{this.name}}</li>",
+            "      <li>Phones: {{#each this.phones}} {{this}} {{/each}}</li>",
+            "      <li>email: {{this.email}}</li>",
+            "    </ul>",
+            "  </li>",
+            "  {{else}}",
+            "  <li>No one to display</li>",
+            "  {{/each}}",
+            "</ul>"
+          ].join("\n")
+
+          expect(evaluate(template, data)).to eq([
+            "People:",
+            "<ul>",
+            "  ",
+            "  <li>",
+            "    <ul>",
+            "      <li>Name: Huey</li>",
+            "      <li>Phones:  1234  5678 </li>",
+            "      <li>email: huey@junior-woodchucks.example.com</li>",
+            "    </ul>",
+            "  </li>",
+            "  ",
+            "  <li>",
+            "    <ul>",
+            "      <li>Name: Dewey</li>",
+            "      <li>Phones:  4321 </li>",
+            "      <li>email: dewey@junior-woodchucks.example.com</li>",
+            "    </ul>",
+            "  </li>",
+            "  ",
+            "</ul>"
+          ].join("\n"))
+        end
+      end
+    end
   end
 end

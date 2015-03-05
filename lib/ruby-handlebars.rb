@@ -5,9 +5,12 @@ require_relative 'ruby-handlebars/helper'
 
 module Handlebars
   class Handlebars
+    include Context
+
     def initialize
       @helpers = {}
       @partials = {}
+      register_default_helpers
     end
 
     def compile(template)
@@ -31,16 +34,47 @@ module Handlebars
     end
 
     def set_context(ctx)
-      @ctx = Context.new(ctx)
-    end
-
-    def get(path)
-      @ctx.get(path)
+      @data = ctx
     end
 
     private
     def template_to_ast(content)
       Transform.new.apply(Parser.new.parse(content))
+    end
+
+    def register_default_helpers
+      register_if_helper
+      register_each_helper
+    end
+
+    def register_if_helper
+      register_helper('if') do |context, condition, block, else_block|
+        if condition
+          block.fn(context)
+        elsif else_block
+          else_block.fn(context)
+        else
+          ""
+        end
+      end
+    end
+
+    def register_each_helper
+      register_helper('each') do |context, items, block, else_block|
+        current_this = context.get('this')
+
+        if items.empty? && else_block
+          result = else_block.fn(context)
+        else
+          result = items.map do |item|
+            context.add_item(:this, item)
+            block.fn(context)
+          end.join('')
+        end
+
+        context.add_item(:this, current_this)
+        result
+      end
     end
   end
 end

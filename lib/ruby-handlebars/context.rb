@@ -1,9 +1,5 @@
 module Handlebars
-  class Context
-    def initialize(data)
-      @data = data
-    end
-
+  module Context
     def get(path)
       items = path.split('.')
 
@@ -13,6 +9,10 @@ module Handlebars
       end
 
       current
+    end
+
+    def add_item(key, value)
+      @data[key] = value
     end
 
     private
@@ -29,7 +29,7 @@ module Handlebars
         end
       end
 
-      p.instance_variable_get("@{attribute}")
+      p.instance_variable_get("@#{attribute}")
     end
   end
 end
