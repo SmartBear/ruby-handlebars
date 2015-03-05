@@ -5,11 +5,6 @@ module Handlebars
     class TreeItem < Struct
       def eval(context)
         _eval(context)
-      rescue Exception => exception
-        puts "Unable to _evaluate #{self} with context #{context}".white
-
-        line = "-" * 80
-        raise exception.class, exception.message
       end
     end
 
