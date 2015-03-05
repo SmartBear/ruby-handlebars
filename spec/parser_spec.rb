@@ -53,9 +53,20 @@ describe Handlebars::Parser do
         }])
       end
 
-      # it 'imbricated blocks' do
-      #   expect(parser.parse('{{#comment "#"}}plic {{#capitalize}}plic{{/capitalize}}{{/comment}}')).to eq([])
-      # end
+      it 'imbricated blocks' do
+        expect(parser.parse('{{#comment "#"}}plic {{#capitalize}}ploc{{/capitalize}} plouc{{/comment}}')).to eq([{
+          helper_name: 'comment',
+          parameters: {parameter_name: {str_content: '#'}},
+          helper_block: [
+            {template_content: 'plic '},
+            {
+              helper_name: 'capitalize',
+              helper_block: [{template_content: 'ploc'}]
+            },
+            {template_content: ' plouc'},
+          ]
+        }])
+      end
     end
 
     context 'if block' do

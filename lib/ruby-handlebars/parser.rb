@@ -38,15 +38,17 @@ module Handlebars
       identifier.capture(:helper_name).as(:helper_name) >>
       (space >> parameters.as(:parameters)).maybe >>
       dccurly >>
-      block.as(:helper_block) >>
-      dynamic { |src,scope|
+      scope {
+        block
+      }.as(:helper_block) >>
+      dynamic { |src, scope|
         docurly >> slash >> str(scope.captures[:helper_name]) >> dccurly
       }
     }
 
     rule(:partial) {
-      docurly >> 
-      gt >> 
+      docurly >>
+      gt >>
       space? >>
       identifier.as(:partial_name) >>
       space? >>
