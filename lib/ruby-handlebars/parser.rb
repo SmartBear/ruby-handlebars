@@ -40,7 +40,7 @@ module Handlebars
       dccurly >>
       scope {
         block
-      }.as(:helper_block) >>
+      } >>
       dynamic { |src, scope|
         docurly >> slash >> str(scope.captures[:helper_name]) >> dccurly
       }
@@ -55,7 +55,7 @@ module Handlebars
       dccurly
     }
 
-    rule(:block) { (template_content | replacement | safe_replacement | helper | partial | block_helper ).repeat }
+    rule(:block) { (template_content | replacement | safe_replacement | helper | partial | block_helper ).repeat.as(:block_items) }
 
     root :block
   end

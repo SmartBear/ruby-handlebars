@@ -12,7 +12,7 @@ module Handlebars
         @hbs.set_context(args)
       end
 
-      @ast.map{|block| block.eval(@hbs) }.join
+      @ast.eval(@hbs)
     end
   end
 end

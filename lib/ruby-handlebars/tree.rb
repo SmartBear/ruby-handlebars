@@ -67,8 +67,9 @@ module Handlebars
     rule(parameter_name: simple(:name)) {Tree::Parameter.new(name)}
 
     rule(helper_name: simple(:name), parameters: subtree(:parameters)) {Tree::Helper.new(name, parameters)}
-    rule(helper_name: simple(:name), parameters: subtree(:parameters), helper_block: subtree(:helper_block)) {Tree::Helper.new(name, parameters, helper_block)}
+    rule(helper_name: simple(:name), parameters: subtree(:parameters), block_items: subtree(:helper_block)) {Tree::Helper.new(name, parameters, helper_block)}
 
     rule(partial_name: simple(:partial_name)) {Tree::Partial.new(partial_name)}
+    rule(block_items: subtree(:block_items)) {Tree::Block.new(block_items)}
   end
 end
