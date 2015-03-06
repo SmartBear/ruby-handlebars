@@ -1,5 +1,3 @@
-require 'pry'
-
 require_relative 'spec_helper'
 require_relative '../lib/ruby-handlebars/parser'
 require_relative '../lib/ruby-handlebars/tree'

@@ -1,4 +1,3 @@
-require 'pry'
 require 'parslet'
 
 module Handlebars
