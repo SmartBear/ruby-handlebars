@@ -67,7 +67,7 @@ Note that in any block helper you can use an ``else`` block:
 ```ruby
 hbs.register_helper('markdown') do |context, block, else_block|
   html = md_to_html(block.fn(context))
-  html.nil? : else_block(context) : html
+  html.nil? : else_block.fn(context) : html
 end
 
 template = [
