@@ -38,8 +38,12 @@ module Handlebars
     end
 
     private
+
+    PARSER = Parser.new
+    TRANSFORM = Transform.new
+
     def template_to_ast(content)
-      Transform.new.apply(Parser.new.parse(content))
+      TRANSFORM.apply(PARSER.parse(content))
     end
 
     def register_default_helpers

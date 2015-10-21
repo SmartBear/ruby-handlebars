@@ -1,7 +1,7 @@
 module Handlebars
   module Context
     def get(path)
-      items = path.split('.')
+      items = path.split('.'.freeze)
 
       current = @data
       until items.empty?
@@ -21,7 +21,7 @@ module Handlebars
       sym_attr = attribute.to_sym
       str_attr = attribute.to_s
 
-      if item.respond_to?('[]')
+      if item.respond_to?(:[])
         if item.has_key?(sym_attr)
           return item[sym_attr]
         elsif item.has_key?(str_attr)
