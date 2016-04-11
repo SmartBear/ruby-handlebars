@@ -173,6 +173,21 @@ describe Handlebars::Handlebars do
           ].join("\n"))
         end
 
+        it 'considers not found items as an empty list and does not raise an error' do
+          template = [
+            "<ul>",
+            "{{#each stuff}}  <li>{{this.name}}</li>",
+            "{{else}}  <li>No stuff found....</li>",
+            "{{/each}}</ul>"
+          ].join("\n")
+
+          expect(evaluate(template, {})).to eq([
+            "<ul>",
+            "  <li>No stuff found....</li>",
+            "</ul>"
+          ].join("\n"))
+        end
+
         it 'using an else statement' do
           template = [
             "<ul>",

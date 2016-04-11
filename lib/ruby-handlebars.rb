@@ -69,7 +69,7 @@ module Handlebars
       register_helper('each') do |context, items, block, else_block|
         current_this = context.get('this')
 
-        if items.empty? && else_block
+        if (items.nil? || items.empty?) && else_block
           result = else_block.fn(context)
         else
           result = items.map do |item|
