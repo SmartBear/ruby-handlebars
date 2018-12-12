@@ -17,6 +17,10 @@ describe Handlebars::Handlebars do
       expect(evaluate('Hello {{name}}', {name: 'world'})).to eq('Hello world')
     end
 
+    it 'allows values specified by methods' do
+      expect(evaluate('Hello {{name}}', double(name: 'world'))).to eq('Hello world')
+    end
+
     it 'a replacement with a path' do
       expect(evaluate('My simple template: {{person.name}}', {person: {name: 'Another name'}})).to eq('My simple template: Another name')
     end
