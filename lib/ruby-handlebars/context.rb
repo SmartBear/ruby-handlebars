@@ -25,7 +25,7 @@ module Handlebars
       sym_attr = attribute.to_sym
       str_attr = attribute.to_s
 
-      if item.respond_to?(:[])
+      if item.respond_to?(:[]) && item.respond_to?(:has_key?)
         if item.has_key?(sym_attr)
           return item[sym_attr]
         elsif item.has_key?(str_attr)

@@ -21,6 +21,14 @@ describe Handlebars::Handlebars do
       expect(evaluate('Hello {{name}}', double(name: 'world'))).to eq('Hello world')
     end
 
+    it 'prefers hash value over method value' do
+      expect(evaluate('Hello {{name}}', double(name: 'world', '[]': 'dog', has_key?: true))).to eq('Hello dog')
+    end
+
+    it 'handles object that implement #[] but not #has_key?' do
+      expect(evaluate('Hello {{name}}', double(name: 'world', '[]': 'dog'))).to eq('Hello world')
+    end
+
     it 'a replacement with a path' do
       expect(evaluate('My simple template: {{person.name}}', {person: {name: 'Another name'}})).to eq('My simple template: Another name')
     end
