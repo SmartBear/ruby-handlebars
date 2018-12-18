@@ -3,7 +3,11 @@ module Handlebars
     def get(path)
       items = path.split('.'.freeze)
 
-      current = @data
+      if @locals.key? items.first.to_sym
+        current = @locals
+      else
+        current = @data
+      end
       until items.empty?
         current = get_attribute(current, items.shift)
       end
@@ -12,7 +16,7 @@ module Handlebars
     end
 
     def add_item(key, value)
-      @data[key] = value
+      @locals[key.to_sym] = value
     end
 
     private

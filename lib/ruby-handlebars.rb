@@ -10,6 +10,7 @@ module Handlebars
     def initialize
       @helpers = {}
       @partials = {}
+      @locals = {}
       register_default_helpers
     end
 

@@ -205,6 +205,29 @@ describe Handlebars::Handlebars do
           ].join("\n"))
         end
 
+        it 'works with non-hash data' do
+          template = [
+            "<ul>",
+            "{{#each items}}  <li>{{this.name}}</li>",
+            "{{/each}}</ul>"
+          ].join("\n")
+
+          data = double(items: ducks)
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "  <li>Huey</li>",
+            "  <li>Dewey</li>",
+            "  <li>Louis</li>",
+            "</ul>"
+          ].join("\n"))
+
+          data = {items: []}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "</ul>"
+          ].join("\n"))
+        end
+
         it 'using an else statement' do
           template = [
             "<ul>",
