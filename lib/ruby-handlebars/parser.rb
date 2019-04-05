@@ -13,6 +13,8 @@ module Handlebars
 
     rule(:docurly)     { ocurly >> ocurly }
     rule(:dccurly)     { ccurly >> ccurly }
+    rule(:tocurly)     { ocurly >> ocurly >> ocurly }
+    rule(:tccurly)     { ccurly >> ccurly >> ccurly }
 
     rule(:identifier)  { match['a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
@@ -27,8 +29,8 @@ module Handlebars
         nocurly
       ).repeat(1).as(:template_content) }
 
-    rule(:replacement) { docurly >> space? >> path.as(:replaced_item) >> space? >> dccurly}
-    rule(:safe_replacement) { ocurly >> replacement >> ccurly }
+    rule(:unsafe_replacement) { docurly >> space? >> path.as(:replaced_unsafe_item) >> space? >> dccurly }
+    rule(:safe_replacement) { tocurly >> space? >> path.as(:replaced_safe_item) >> space? >> tccurly }
 
     rule(:sq_string)   { match("'") >> match("[^']").repeat.maybe.as(:str_content) >> match("'") }
     rule(:dq_string)   { match('"') >> match('[^"]').repeat.maybe.as(:str_content) >> match('"') }
@@ -37,8 +39,8 @@ module Handlebars
     rule(:parameter)   { (path | string).as(:parameter_name) }
     rule(:parameters)  { parameter >> (space >> parameter).repeat }
 
-    rule(:unsafe_helper) { docurly >> space? >> identifier.as(:helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly}
-    rule(:safe_helper) { ocurly >> helper >> ccurly }
+    rule(:unsafe_helper) { docurly >> space? >> identifier.as(:unsafe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly }
+    rule(:safe_helper) { tocurly >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> tccurly }
 
     rule(:helper) { unsafe_helper | safe_helper }
 
@@ -66,7 +68,7 @@ module Handlebars
       dccurly
     }
 
-    rule(:block) { (template_content | replacement | safe_replacement | helper | partial | block_helper ).repeat.as(:block_items) }
+    rule(:block) { (template_content | unsafe_replacement | safe_replacement | helper | partial | block_helper ).repeat.as(:block_items) }
 
     root :block
   end
