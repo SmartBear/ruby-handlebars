@@ -15,6 +15,20 @@ module Handlebars
       @data[key] = value
     end
 
+    def add_items(hash)
+      @data.merge! hash
+    end
+
+    def save_special_variables
+      %i( this @first @last @index )
+        .collect {|key| [key, get(key.to_s)]}
+        .to_h
+    end
+
+    def restore_special_variables variables
+      @data.merge! variables
+    end
+
     private
 
     def get_attribute(item, attribute)
