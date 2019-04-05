@@ -16,22 +16,22 @@ describe Handlebars::Parser do
     it 'simple replacements' do
       expect(parser.parse('{{plic}}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_unsafe_item: 'plic'}
         ]
       })
       expect(parser.parse('{{ plic}}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_unsafe_item: 'plic'}
         ]
       })
       expect(parser.parse('{{plic }}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_unsafe_item: 'plic'}
         ]
       })
       expect(parser.parse('{{ plic }}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_unsafe_item: 'plic'}
         ]
       })
     end
@@ -39,25 +39,25 @@ describe Handlebars::Parser do
     it 'safe strings' do
       expect(parser.parse('{{{plic}}}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_safe_item: 'plic'}
         ]
       })
 
       expect(parser.parse('{{{ plic}}}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_safe_item: 'plic'}
         ]
       })
 
       expect(parser.parse('{{{plic }}}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_safe_item: 'plic'}
         ]
       })
 
       expect(parser.parse('{{{ plic }}}')).to eq({
         block_items: [
-          {replaced_item: 'plic'}
+          {replaced_safe_item: 'plic'}
         ]
       })
 
@@ -68,7 +68,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{ capitalize plic }}')).to eq({
           block_items: [
             {
-              helper_name: 'capitalize',
+              unsafe_helper_name: 'capitalize',
               parameters: {parameter_name: 'plic'}
             }
           ]
@@ -79,7 +79,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{ concat plic ploc plouf }}')).to eq({
           block_items: [
             {
-              helper_name: 'concat',
+              unsafe_helper_name: 'concat',
               parameters: [
                 {parameter_name: 'plic'},
                 {parameter_name: 'ploc'},
@@ -160,7 +160,7 @@ describe Handlebars::Parser do
               parameters: {parameter_name: 'something'},
               block_items: [
                 {template_content: 'Ok'},
-                {replaced_item: 'else'},
+                {replaced_unsafe_item: 'else'},
                 {template_content: 'not ok'}
               ]
             }
@@ -199,7 +199,7 @@ describe Handlebars::Parser do
               parameters: {parameter_name: 'people'},
               block_items: [
                 {template_content: ' '},
-                {replaced_item: 'this.name'},
+                {replaced_unsafe_item: 'this.name'},
                 {template_content: ' '}
               ]
             }
@@ -215,14 +215,14 @@ describe Handlebars::Parser do
               parameters: {parameter_name: 'people'},
               block_items: [
                 {template_content: ' '},
-                {replaced_item: 'this.name'},
+                {replaced_unsafe_item: 'this.name'},
                 {template_content: ' <ul> '},
                 {
                   helper_name: 'each',
                   parameters: {parameter_name: 'this.contact'},
                   block_items: [
                     {template_content: ' <li>'},
-                    {replaced_item: 'this'},
+                    {replaced_unsafe_item: 'this'},
                     {template_content: '</li> '}
                   ]
                 },
