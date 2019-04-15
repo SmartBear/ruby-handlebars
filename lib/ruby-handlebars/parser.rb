@@ -30,7 +30,7 @@ module Handlebars
     rule(:eof)         { any.absent? }
     rule(:template_content) {
       (
-        nocurly           | # Not a curly
+        nocurly.repeat(1) | # A sequence of non-curlies
         ocurly >> nocurly | # Opening curly that doesn't start a {{}}
         ccurly            | # Closing curly that is not inside a {{}}
         ocurly >> eof       # Opening curly that doesn't start a {{}} because it's the end
