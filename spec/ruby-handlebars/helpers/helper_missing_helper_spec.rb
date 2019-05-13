@@ -9,6 +9,7 @@ require_relative '../../../lib/ruby-handlebars/helpers/helper_missing_helper'
 describe Handlebars::Helpers::HelperMissingHelper do
   let(:subject) { Handlebars::Helpers::HelperMissingHelper }
   let(:hbs) { Handlebars::Handlebars.new }
+  let(:ctx) {Handlebars::Context.new(hbs, {})}
 
   it_behaves_like "a registerable helper", "helperMissing"
 
@@ -16,7 +17,7 @@ describe Handlebars::Helpers::HelperMissingHelper do
     let(:name) { "missing_helper" }
 
     it 'raises a Handlebars::UnknownHelper exception with the name given as a parameter' do
-      expect { subject.apply(hbs, name, nil, nil) }.to raise_exception(Handlebars::UnknownHelper, "Helper \"#{name}\" does not exist")
+      expect { subject.apply(ctx, name, nil, nil) }.to raise_exception(Handlebars::UnknownHelper, "Helper \"#{name}\" does not exist")
     end
   end
 

@@ -1,5 +1,10 @@
 module Handlebars
-  module Context
+  class Context
+    def initialize(hbs, data)
+      @hbs = hbs
+      @data = data
+    end
+
     def get(path)
       items = path.split('.'.freeze)
       if locals.key? items.first.to_sym
@@ -13,6 +18,22 @@ module Handlebars
       end
 
       current
+    end
+
+    def escaper
+      @hbs.escaper
+    end
+
+    def get_helper(name)
+      @hbs.get_helper(name)
+    end
+
+    def get_as_helper(name)
+      @hbs.get_as_helper(name)
+    end
+
+    def get_partial(name)
+      @hbs.get_partial(name)
     end
 
     def add_item(key, value)

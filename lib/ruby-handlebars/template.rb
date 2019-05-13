@@ -8,11 +8,13 @@ module Handlebars
     end
 
     def call(args = nil)
-      if args
-        @hbs.set_context(args)
-      end
+      ctx = Context.new(@hbs, args)
 
-      @ast.eval(@hbs)
+      @ast.eval(ctx)
+    end
+
+    def call_with_context(ctx)
+      @ast.eval(ctx)
     end
   end
 end

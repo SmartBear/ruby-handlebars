@@ -8,6 +8,7 @@ require_relative '../../../lib/ruby-handlebars/helpers/unless_helper'
 describe Handlebars::Helpers::UnlessHelper do
   let(:subject) { Handlebars::Helpers::UnlessHelper }
   let(:hbs) {Handlebars::Handlebars.new}
+  let(:ctx) {Handlebars::Context.new(hbs, {})}
 
   it_behaves_like "a registerable helper", "unless"
 
@@ -28,7 +29,7 @@ describe Handlebars::Helpers::UnlessHelper do
       let(:else_block) { nil }
 
       it 'returns an empty-string' do
-        expect(subject.apply(hbs, params, block, else_block)).to eq("")
+        expect(subject.apply(ctx, params, block, else_block)).to eq("")
 
         expect(block).not_to have_received(:fn)
         expect(else_block).not_to have_received(:fn)
