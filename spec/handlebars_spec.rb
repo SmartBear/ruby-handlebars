@@ -17,6 +17,18 @@ describe Handlebars::Handlebars do
       expect(evaluate('Hello {{name}}', {name: 'world'})).to eq('Hello world')
     end
 
+    it 'allows values specified by methods' do
+      expect(evaluate('Hello {{name}}', double(name: 'world'))).to eq('Hello world')
+    end
+
+    it 'prefers hash value over method value' do
+      expect(evaluate('Hello {{name}}', double(name: 'world', '[]': 'dog', has_key?: true))).to eq('Hello dog')
+    end
+
+    it 'handles object that implement #[] but not #has_key?' do
+      expect(evaluate('Hello {{name}}', double(name: 'world', '[]': 'dog'))).to eq('Hello world')
+    end
+
     it 'a replacement with a path' do
       expect(evaluate('My simple template: {{person.name}}', {person: {name: 'Another name'}})).to eq('My simple template: Another name')
     end
@@ -203,6 +215,29 @@ describe Handlebars::Handlebars do
           expect(evaluate(template, {})).to eq([
             "<ul>",
             "  <li>No stuff found....</li>",
+            "</ul>"
+          ].join("\n"))
+        end
+
+        it 'works with non-hash data' do
+          template = [
+            "<ul>",
+            "{{#each items}}  <li>{{this.name}}</li>",
+            "{{/each}}</ul>"
+          ].join("\n")
+
+          data = double(items: ducks)
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "  <li>Huey</li>",
+            "  <li>Dewey</li>",
+            "  <li>Louis</li>",
+            "</ul>"
+          ].join("\n"))
+
+          data = {items: []}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
             "</ul>"
           ].join("\n"))
         end

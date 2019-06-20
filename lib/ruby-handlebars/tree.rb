@@ -52,7 +52,7 @@ module Handlebars
 
     class Partial < TreeItem.new(:partial_name)
       def _eval(context)
-        context.get_partial(partial_name.to_s).call(context)
+        context.get_partial(partial_name.to_s).call
       end
     end
 

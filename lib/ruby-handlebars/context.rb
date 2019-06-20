@@ -3,7 +3,11 @@ module Handlebars
     def get(path)
       items = path.split('.'.freeze)
 
-      current = @data
+      if @locals.key? items.first.to_sym
+        current = @locals
+      else
+        current = @data
+      end
       until items.empty?
         current = get_attribute(current, items.shift)
       end
@@ -12,7 +16,7 @@ module Handlebars
     end
 
     def add_item(key, value)
-      @data[key] = value
+      @locals[key.to_sym] = value
     end
 
     private
@@ -21,16 +25,12 @@ module Handlebars
       sym_attr = attribute.to_sym
       str_attr = attribute.to_s
 
-      if item.respond_to?(:[])
+      if item.respond_to?(:[]) && item.respond_to?(:has_key?)
         if item.has_key?(sym_attr)
           return item[sym_attr]
         elsif item.has_key?(str_attr)
           return item[str_attr]
         end
-      end
-
-      if item.instance_variables.include?("@#{attribute}")
-        return item.instance_variable_get("@#{attribute}")
       end
 
       if item.respond_to?(sym_attr)
