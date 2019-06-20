@@ -75,6 +75,50 @@ describe Handlebars::Parser do
         })
       end
 
+      it 'with single-quoted string parameter' do
+        expect(parser.parse("{{ capitalize 'hi'}}")).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: 'hi'}},
+            }
+          ]
+        })
+      end
+
+      it 'with single-quoted empty string parameter' do
+        expect(parser.parse("{{ capitalize ''}}")).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: ''}},
+            }
+          ]
+        })
+      end
+
+      it 'with double-quoted string parameter' do
+        expect(parser.parse('{{ capitalize "hi"}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: 'hi'}},
+            }
+          ]
+        })
+      end
+
+      it 'with double-quoted empty string parameter' do
+        expect(parser.parse('{{ capitalize ""}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: ''}},
+            }
+          ]
+        })
+      end
+
       it 'with multiple parameters' do
         expect(parser.parse('{{ concat plic ploc plouf }}')).to eq({
           block_items: [

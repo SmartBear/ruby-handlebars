@@ -22,8 +22,8 @@ module Handlebars
     rule(:replacement) { docurly >> space? >> path.as(:replaced_item) >> space? >> dccurly}
     rule(:safe_replacement) { ocurly >> replacement >> ccurly }
 
-    rule(:sq_string)   { match("'") >> match("[^']").repeat(1).as(:str_content) >> match("'") }
-    rule(:dq_string)   { match('"') >> match('[^"]').repeat(1).as(:str_content) >> match('"') }
+    rule(:sq_string)   { match("'") >> match("[^']").repeat.maybe.as(:str_content) >> match("'") }
+    rule(:dq_string)   { match('"') >> match('[^"]').repeat.maybe.as(:str_content) >> match('"') }
     rule(:string)      { sq_string | dq_string }
 
     rule(:parameter)   { (path | string).as(:parameter_name) }

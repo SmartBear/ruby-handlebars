@@ -51,6 +51,12 @@ describe Handlebars::Handlebars do
         expect(evaluate("{{add left '&' right}}", {left: 'Law', right: 'Order'})).to eq("Law & Order")
       end
 
+      it 'with an empty string argument' do
+        hbs.register_helper('noah') {|context, value| value.to_s.gsub(/a/, '')}
+
+        expect(evaluate("hey{{noah ''}}there", {})).to eq("heythere")
+      end
+
       it 'block' do
         hbs.register_helper('comment') do |context, commenter, block|
           block.fn(context).split("\n").map do |line|
