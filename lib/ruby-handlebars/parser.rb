@@ -17,7 +17,15 @@ module Handlebars
     rule(:identifier)  { match['a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
-    rule(:template_content) { match('[^{}]').repeat(1).as(:template_content) }
+    rule(:nocurly)     { match('[^{}]') }
+    rule(:eof)         { any.absent? }
+    rule(:template_content) {
+      (
+        ocurly >> nocurly | # Opening curly that doesn't start a {{}}
+        ocurly >> eof     | # Opening curly that doesn't start a {{}} because it's the end
+        ccurly            | # Closing curly that is not inside a {{}}
+        nocurly
+      ).repeat(1).as(:template_content) }
 
     rule(:replacement) { docurly >> space? >> path.as(:replaced_item) >> space? >> dccurly}
     rule(:safe_replacement) { ocurly >> replacement >> ccurly }

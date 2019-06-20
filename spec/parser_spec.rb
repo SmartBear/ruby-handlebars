@@ -277,5 +277,41 @@ describe Handlebars::Parser do
         })
       end
     end
+
+    context 'templates with single curlies' do
+      it 'works with loose curlies' do
+        expect(parser.parse('} Hi { hey } {')).to eq({
+          block_items: [
+            {template_content: '} Hi { hey } {'}
+          ]
+        })
+      end
+
+      it 'works with groups of curlies' do
+        expect(parser.parse('{ Hi }{ hey }')).to eq({
+          block_items: [
+            {template_content: '{ Hi }{ hey }'}
+          ]
+        })
+      end
+
+      it 'works with closing curly before value' do
+        expect(parser.parse('Hi }{{ hey }}')).to eq({
+          block_items: [
+            {template_content: 'Hi }'},
+            {replaced_item: 'hey'}
+          ]
+        })
+      end
+
+      it 'works with closing curly before value at the start' do
+        expect(parser.parse('}{{ hey }}')).to eq({
+          block_items: [
+            {template_content: '}'},
+            {replaced_item: 'hey'}
+          ]
+        })
+      end
+    end
   end
 end
