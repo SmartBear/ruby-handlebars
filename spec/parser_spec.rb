@@ -75,6 +75,50 @@ describe Handlebars::Parser do
         })
       end
 
+      it 'with single-quoted string parameter' do
+        expect(parser.parse("{{ capitalize 'hi'}}")).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: 'hi'}},
+            }
+          ]
+        })
+      end
+
+      it 'with single-quoted empty string parameter' do
+        expect(parser.parse("{{ capitalize ''}}")).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: ''}},
+            }
+          ]
+        })
+      end
+
+      it 'with double-quoted string parameter' do
+        expect(parser.parse('{{ capitalize "hi"}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: 'hi'}},
+            }
+          ]
+        })
+      end
+
+      it 'with double-quoted empty string parameter' do
+        expect(parser.parse('{{ capitalize ""}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'capitalize',
+              parameters: {parameter_name: {str_content: ''}},
+            }
+          ]
+        })
+      end
+
       it 'with multiple parameters' do
         expect(parser.parse('{{ concat plic ploc plouf }}')).to eq({
           block_items: [
@@ -229,6 +273,42 @@ describe Handlebars::Parser do
                 {template_content: '</ul>'}
               ]
             }
+          ]
+        })
+      end
+    end
+
+    context 'templates with single curlies' do
+      it 'works with loose curlies' do
+        expect(parser.parse('} Hi { hey } {')).to eq({
+          block_items: [
+            {template_content: '} Hi { hey } {'}
+          ]
+        })
+      end
+
+      it 'works with groups of curlies' do
+        expect(parser.parse('{ Hi }{ hey }')).to eq({
+          block_items: [
+            {template_content: '{ Hi }{ hey }'}
+          ]
+        })
+      end
+
+      it 'works with closing curly before value' do
+        expect(parser.parse('Hi }{{ hey }}')).to eq({
+          block_items: [
+            {template_content: 'Hi }'},
+            {replaced_item: 'hey'}
+          ]
+        })
+      end
+
+      it 'works with closing curly before value at the start' do
+        expect(parser.parse('}{{ hey }}')).to eq({
+          block_items: [
+            {template_content: '}'},
+            {replaced_item: 'hey'}
           ]
         })
       end

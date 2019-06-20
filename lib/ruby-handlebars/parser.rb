@@ -19,13 +19,21 @@ module Handlebars
     rule(:identifier)  { match['a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
-    rule(:template_content) { match('[^{}]').repeat(1).as(:template_content) }
+    rule(:nocurly)     { match('[^{}]') }
+    rule(:eof)         { any.absent? }
+    rule(:template_content) {
+      (
+        ocurly >> nocurly | # Opening curly that doesn't start a {{}}
+        ocurly >> eof     | # Opening curly that doesn't start a {{}} because it's the end
+        ccurly            | # Closing curly that is not inside a {{}}
+        nocurly
+      ).repeat(1).as(:template_content) }
 
     rule(:unsafe_replacement) { docurly >> space? >> path.as(:replaced_unsafe_item) >> space? >> dccurly }
     rule(:safe_replacement) { tocurly >> space? >> path.as(:replaced_safe_item) >> space? >> tccurly }
 
-    rule(:sq_string)   { match("'") >> match("[^']").repeat(1).as(:str_content) >> match("'") }
-    rule(:dq_string)   { match('"') >> match('[^"]').repeat(1).as(:str_content) >> match('"') }
+    rule(:sq_string)   { match("'") >> match("[^']").repeat.maybe.as(:str_content) >> match("'") }
+    rule(:dq_string)   { match('"') >> match('[^"]').repeat.maybe.as(:str_content) >> match('"') }
     rule(:string)      { sq_string | dq_string }
 
     rule(:parameter)   { (path | string).as(:parameter_name) }
