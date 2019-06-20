@@ -1,5 +1,3 @@
-require 'colorize'
-
 module Handlebars
   module Tree
     class TreeItem < Struct
