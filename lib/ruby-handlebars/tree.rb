@@ -1,5 +1,3 @@
-require 'colorize'
-
 module Handlebars
   module Tree
     class TreeItem < Struct
@@ -28,6 +26,12 @@ module Handlebars
       end
     end
 
+    class EscapedReplacement < Replacement
+      def _eval(context)
+        context.escaper.escape(super(context).to_s)
+      end
+    end
+
     class String < TreeItem.new(:content)
       def _eval(context)
         return content
@@ -50,9 +54,15 @@ module Handlebars
       end
     end
 
+    class EscapedHelper < Helper
+      def _eval(context)
+        context.escaper.escape(super(context).to_s)
+      end
+    end
+
     class Partial < TreeItem.new(:partial_name)
       def _eval(context)
-        context.get_partial(partial_name.to_s).call(context)
+        context.get_partial(partial_name.to_s).call
       end
     end
 
@@ -70,12 +80,19 @@ module Handlebars
 
   class Transform < Parslet::Transform
     rule(template_content: simple(:content)) {Tree::TemplateContent.new(content)}
-    rule(replaced_item: simple(:item)) {Tree::Replacement.new(item)}
+    rule(replaced_unsafe_item: simple(:item)) {Tree::EscapedReplacement.new(item)}
+    rule(replaced_safe_item: simple(:item)) {Tree::Replacement.new(item)}
     rule(str_content: simple(:content)) {Tree::String.new(content)}
     rule(parameter_name: simple(:name)) {Tree::Parameter.new(name)}
 
     rule(
-      helper_name: simple(:name),
+      unsafe_helper_name: simple(:name),
+      parameters: subtree(:parameters)
+    ) {
+      Tree::EscapedHelper.new(name, parameters)
+    }
+    rule(
+      safe_helper_name: simple(:name),
       parameters: subtree(:parameters)
     ) {
       Tree::Helper.new(name, parameters)

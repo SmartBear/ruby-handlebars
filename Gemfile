@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
-
 gem 'parslet', '~> 1.6', '>= 1.6.2'
-gem 'colorize', '~> 0.7', '>= 0.7.5'
 
 group :development do
   gem 'pry', '~> 0.10', '>= 0.10.1'

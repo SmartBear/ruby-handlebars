@@ -7,8 +7,8 @@ module Handlebars
       @ast = ast
     end
 
-    def call(args)
-      if args.is_a? Hash
+    def call(args = nil)
+      if args
         @hbs.set_context(args)
       end
 

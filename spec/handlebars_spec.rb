@@ -1,5 +1,7 @@
 require_relative 'spec_helper'
 require_relative '../lib/ruby-handlebars'
+require_relative '../lib/ruby-handlebars/escapers/dummy_escaper'
+
 
 describe Handlebars::Handlebars do
   let(:hbs) {Handlebars::Handlebars.new}
@@ -15,6 +17,30 @@ describe Handlebars::Handlebars do
 
     it 'a simple replacement' do
       expect(evaluate('Hello {{name}}', {name: 'world'})).to eq('Hello world')
+    end
+
+    it 'a double braces replacement with unsafe characters' do
+      expect(evaluate('Hello {{name}}', {name: '<"\'>&'})).to eq('Hello &lt;&quot;&#39;&gt;&amp;')
+    end
+
+    it 'a double braces replacement with nil' do
+      expect(evaluate('Hello {{name}}', {name: nil})).to eq('Hello ')
+    end
+
+    it 'a triple braces replacement with unsafe characters' do
+      expect(evaluate('Hello {{{name}}}', {name: '<"\'>&'})).to eq('Hello <"\'>&')
+    end
+
+    it 'allows values specified by methods' do
+      expect(evaluate('Hello {{name}}', double(name: 'world'))).to eq('Hello world')
+    end
+
+    it 'prefers hash value over method value' do
+      expect(evaluate('Hello {{name}}', double(name: 'world', '[]': 'dog', has_key?: true))).to eq('Hello dog')
+    end
+
+    it 'handles object that implement #[] but not #has_key?' do
+      expect(evaluate('Hello {{name}}', double(name: 'world', '[]': 'dog'))).to eq('Hello world')
     end
 
     it 'a replacement with a path' do
@@ -48,7 +74,22 @@ describe Handlebars::Handlebars do
       it 'with multiple arguments, including strings' do
         hbs.register_helper('add') {|context, left, op, right| "#{left} #{op} #{right}"}
 
-        expect(evaluate("{{add left '&' right}}", {left: 'Law', right: 'Order'})).to eq("Law & Order")
+        expect(evaluate("{{add left '&' right}}", {left: 'Law', right: 'Order'})).to eq("Law &amp; Order")
+        expect(evaluate("{{{add left '&' right}}}", {left: 'Law', right: 'Order'})).to eq("Law & Order")
+      end
+
+      it 'with an empty string argument' do
+        hbs.register_helper('noah') {|context, value| value.to_s.gsub(/a/, '')}
+
+        expect(evaluate("hey{{noah ''}}there", {})).to eq("heythere")
+      end
+
+      it 'with helpers as arguments' do
+        hbs.register_helper('wrap_parens') {|context, value| "(#{value})"}
+        hbs.register_helper('wrap_dashes') {|context, value| "-#{value}-"}
+
+        expect(evaluate('{{wrap_dashes (wrap_parens "hello")}}', {})).to eq("-(hello)-")
+        expect(evaluate('{{wrap_dashes (wrap_parens world)}}', {world: "world"})).to eq("-(world)-")
       end
 
       it 'block' do
@@ -201,6 +242,29 @@ describe Handlebars::Handlebars do
           ].join("\n"))
         end
 
+        it 'works with non-hash data' do
+          template = [
+            "<ul>",
+            "{{#each items}}  <li>{{this.name}}</li>",
+            "{{/each}}</ul>"
+          ].join("\n")
+
+          data = double(items: ducks)
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "  <li>Huey</li>",
+            "  <li>Dewey</li>",
+            "  <li>Louis</li>",
+            "</ul>"
+          ].join("\n"))
+
+          data = {items: []}
+          expect(evaluate(template, data)).to eq([
+            "<ul>",
+            "</ul>"
+          ].join("\n"))
+        end
+
         it 'using an else statement' do
           template = [
             "<ul>",
@@ -313,6 +377,61 @@ describe Handlebars::Handlebars do
           "{{/each}}"
         ].join
         expect(evaluate(template, {items: %w(a b c)})).to eq("a 0\nb 1\nc 2\n")
+      end
+    end
+  end
+
+  context 'escaping characters' do
+    let(:escaper) { nil }
+    let(:name) { '<"\'>&' }
+    let(:replacement_escaped) { evaluate('Hello {{ name }}', {name: name}) }
+    let(:helper_replacement_escaped) {
+      hbs.register_helper('wrap_parens') {|context, value| "(#{value})"}
+      evaluate('Hello {{wrap_parens name}}', {name: name})
+    }
+
+    before do
+      hbs.set_escaper(escaper)
+    end
+
+    context 'default escaper' do
+      it 'escapes HTML characters in simple replacements' do
+        expect(replacement_escaped).to eq('Hello &lt;&quot;&#39;&gt;&amp;')
+      end
+
+      it 'escapes HTML characters in helpers' do
+        expect(helper_replacement_escaped).to eq('Hello (&lt;&quot;&#39;&gt;&amp;)')
+      end
+    end
+
+    context 'DummyEscaper' do
+      let(:escaper) { Handlebars::Escapers::DummyEscaper }
+
+      it 'escapes nothing' do
+        expect(replacement_escaped).to eq('Hello <"\'>&')
+      end
+
+      it 'escapes nothing in helpers' do
+        expect(helper_replacement_escaped).to eq('Hello (<"\'>&)')
+      end
+    end
+
+    context 'custom escaper' do
+      class VowelEscaper
+        def self.escape(value)
+          value.gsub(/([aeiuo])/, '-\1')
+        end
+      end
+
+      let(:escaper) { VowelEscaper }
+      let(:name) { 'Her Serene Highness' }
+
+      it 'applies the escaping' do
+        expect(replacement_escaped).to eq('Hello H-er S-er-en-e H-ighn-ess')
+      end
+
+      it 'applies the escaping in helpers' do
+        expect(helper_replacement_escaped).to eq('Hello (H-er S-er-en-e H-ighn-ess)')
       end
     end
   end
