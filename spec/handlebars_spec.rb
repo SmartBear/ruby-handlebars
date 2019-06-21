@@ -27,6 +27,7 @@ describe Handlebars::Handlebars do
 
     it 'a triple braces replacement with unsafe characters' do
       expect(evaluate('Hello {{{name}}}', {name: '<"\'>&'})).to eq('Hello <"\'>&')
+    end
 
     it 'allows values specified by methods' do
       expect(evaluate('Hello {{name}}', double(name: 'world'))).to eq('Hello world')

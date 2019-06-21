@@ -79,7 +79,7 @@ describe Handlebars::Parser do
         expect(parser.parse("{{ capitalize 'hi'}}")).to eq({
           block_items: [
             {
-              helper_name: 'capitalize',
+              unsafe_helper_name: 'capitalize',
               parameters: {parameter_name: {str_content: 'hi'}},
             }
           ]
@@ -90,7 +90,7 @@ describe Handlebars::Parser do
         expect(parser.parse("{{ capitalize ''}}")).to eq({
           block_items: [
             {
-              helper_name: 'capitalize',
+              unsafe_helper_name: 'capitalize',
               parameters: {parameter_name: {str_content: ''}},
             }
           ]
@@ -101,7 +101,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{ capitalize "hi"}}')).to eq({
           block_items: [
             {
-              helper_name: 'capitalize',
+              unsafe_helper_name: 'capitalize',
               parameters: {parameter_name: {str_content: 'hi'}},
             }
           ]
@@ -112,7 +112,7 @@ describe Handlebars::Parser do
         expect(parser.parse('{{ capitalize ""}}')).to eq({
           block_items: [
             {
-              helper_name: 'capitalize',
+              unsafe_helper_name: 'capitalize',
               parameters: {parameter_name: {str_content: ''}},
             }
           ]
@@ -299,7 +299,7 @@ describe Handlebars::Parser do
         expect(parser.parse('Hi }{{ hey }}')).to eq({
           block_items: [
             {template_content: 'Hi }'},
-            {replaced_item: 'hey'}
+            {replaced_unsafe_item: 'hey'}
           ]
         })
       end
@@ -308,7 +308,7 @@ describe Handlebars::Parser do
         expect(parser.parse('}{{ hey }}')).to eq({
           block_items: [
             {template_content: '}'},
-            {replaced_item: 'hey'}
+            {replaced_unsafe_item: 'hey'}
           ]
         })
       end
