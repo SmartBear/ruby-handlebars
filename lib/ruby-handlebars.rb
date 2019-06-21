@@ -75,6 +75,7 @@ module Handlebars
 
     def register_each_helper
       register_helper('each') do |context, items, block, else_block|
+        current_this = context.get('this')
         saved = context.save_special_variables
 
         if (items.nil? || items.empty?)
@@ -83,11 +84,13 @@ module Handlebars
           end
         else
           result = items.each_with_index.map do |item, index|
-            context.add_items this: item, :@index => index, :@first => (index == 0), :@last => (index == items.length-1)
+            context.add_item(:this, item)
+            context.add_items :@index => index, :@first => (index == 0), :@last => (index == items.length-1)
             block.fn(context)
           end.join('')
         end
 
+        context.add_item(:this, current_this)
         context.restore_special_variables saved
         result
       end

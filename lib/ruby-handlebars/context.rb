@@ -8,6 +8,7 @@ module Handlebars
       else
         current = @data
       end
+
       until items.empty?
         current = get_attribute(current, items.shift)
       end
@@ -20,16 +21,18 @@ module Handlebars
     end
 
     def add_items(hash)
+      return unless @data.respond_to? :merge!
       @data.merge! hash
     end
 
     def save_special_variables
-      %i( this @first @last @index )
+      %i( @first @last @index )
         .collect {|key| [key, get(key.to_s)]}
         .to_h
     end
 
     def restore_special_variables variables
+      return unless @data.respond_to? :merge!
       @data.merge! variables
     end
 
