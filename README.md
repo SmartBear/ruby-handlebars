@@ -114,3 +114,5 @@ Aknowledgements
 
 This gem would simply not exist if the handlebars team was not here. Thanks a lot for this awesome templating system.
 Thanks a lot to @cowboyd for the [handlebars.rb](https://github.com/cowboyd/handlebars.rb) gem. We used it for a while and it's great (and as told at the beginning of the README, if you do not need any Windows support, use handlebars.rb instead ;) )
+
+Thanks a lot to the contributors @mvz and @schuetzm for making it a way better Handlebars renderer :)
