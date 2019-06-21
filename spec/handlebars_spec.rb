@@ -1,5 +1,7 @@
 require_relative 'spec_helper'
 require_relative '../lib/ruby-handlebars'
+require_relative '../lib/ruby-handlebars/escapers/dummy_escaper'
+
 
 describe Handlebars::Handlebars do
   let(:hbs) {Handlebars::Handlebars.new}
@@ -342,6 +344,45 @@ describe Handlebars::Handlebars do
             "</ul>"
           ].join("\n"))
         end
+      end
+    end
+  end
+
+  context 'escaping characters' do
+    let(:escaper) { nil }
+    let(:name) { '<"\'>&' }
+    let(:escaped) { evaluate('Hello {{ name }}', {name: name}) }
+
+    before do
+      hbs.set_escaper(escaper)
+    end
+
+    context 'default escaper' do
+      it 'escapes HTML characters' do
+        expect(escaped).to eq('Hello &lt;&quot;&#39;&gt;&amp;')
+      end
+    end
+
+    context 'DummyEscaper' do
+      let(:escaper) { Handlebars::Escapers::DummyEscaper }
+
+      it 'escapes nothing' do
+        expect(escaped).to eq('Hello <"\'>&')
+      end
+    end
+
+    context 'custom escaper' do
+      class VowelEscaper
+        def self.escape(value)
+          value.gsub(/([aeiuo])/, '-\1')
+        end
+      end
+
+      let(:escaper) { VowelEscaper }
+      let(:name) { 'Her Serene Highness' }
+
+      it 'applies the escaping' do
+        expect(escaped).to eq('Hello H-er S-er-en-e H-ighn-ess')
       end
     end
   end

@@ -2,16 +2,19 @@ require_relative 'ruby-handlebars/parser'
 require_relative 'ruby-handlebars/tree'
 require_relative 'ruby-handlebars/template'
 require_relative 'ruby-handlebars/helper'
+require_relative 'ruby-handlebars/escapers/html_escaper'
 
 module Handlebars
   class Handlebars
     include Context
+    attr_reader :escaper
 
-    def initialize
+    def initialize()
       @helpers = {}
       @partials = {}
       @locals = {}
       register_default_helpers
+      set_escaper
     end
 
     def compile(template)
@@ -36,6 +39,10 @@ module Handlebars
 
     def set_context(ctx)
       @data = ctx
+    end
+
+    def set_escaper(escaper = nil)
+      @escaper = escaper || Escapers::HTMLEscaper
     end
 
     private

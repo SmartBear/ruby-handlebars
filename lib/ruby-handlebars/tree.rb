@@ -28,7 +28,7 @@ module Handlebars
 
     class EscapedReplacement < Replacement
       def _eval(context)
-        CGI::escapeHTML(super(context).to_s)
+        context.escaper.escape(super(context).to_s)
       end
     end
 
