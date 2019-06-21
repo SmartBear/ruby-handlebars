@@ -82,6 +82,14 @@ describe Handlebars::Handlebars do
         expect(evaluate("hey{{noah ''}}there", {})).to eq("heythere")
       end
 
+      it 'with helpers as arguments' do
+        hbs.register_helper('wrap_parens') {|context, value| "(#{value})"}
+        hbs.register_helper('wrap_dashes') {|context, value| "-#{value}-"}
+
+        expect(evaluate('{{wrap_dashes (wrap_parens "hello")}}', {})).to eq("-(hello)-")
+        expect(evaluate('{{wrap_dashes (wrap_parens world)}}', {world: "world"})).to eq("-(world)-")
+      end
+
       it 'block' do
         hbs.register_helper('comment') do |context, commenter, block|
           block.fn(context).split("\n").map do |line|

@@ -179,6 +179,20 @@ describe Handlebars::Parser do
           ]
         })
       end
+
+      it 'helpers as arguments' do
+        expect(parser.parse('{{foo (bar baz)}}')).to eq({
+          block_items: [
+            {
+              unsafe_helper_name: 'foo',
+              parameters: {
+                safe_helper_name: 'bar',
+                parameters: {parameter_name: 'baz'}
+              }
+            }
+          ]
+        })
+      end
     end
 
     context 'if block' do

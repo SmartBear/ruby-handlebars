@@ -36,7 +36,10 @@ module Handlebars
     rule(:dq_string)   { match('"') >> match('[^"]').repeat.maybe.as(:str_content) >> match('"') }
     rule(:string)      { sq_string | dq_string }
 
-    rule(:parameter)   { (path | string).as(:parameter_name) }
+    rule(:parameter)   {
+      (path | string).as(:parameter_name) |
+      (str('(') >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> str(')'))
+    }
     rule(:parameters)  { parameter >> (space >> parameter).repeat }
 
     rule(:unsafe_helper) { docurly >> space? >> identifier.as(:unsafe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly }
