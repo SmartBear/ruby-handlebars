@@ -351,15 +351,23 @@ describe Handlebars::Handlebars do
   context 'escaping characters' do
     let(:escaper) { nil }
     let(:name) { '<"\'>&' }
-    let(:escaped) { evaluate('Hello {{ name }}', {name: name}) }
+    let(:replacement_escaped) { evaluate('Hello {{ name }}', {name: name}) }
+    let(:helper_replacement_escaped) {
+      hbs.register_helper('wrap_parens') {|context, value| "(#{value})"}
+      evaluate('Hello {{wrap_parens name}}', {name: name})
+    }
 
     before do
       hbs.set_escaper(escaper)
     end
 
     context 'default escaper' do
-      it 'escapes HTML characters' do
-        expect(escaped).to eq('Hello &lt;&quot;&#39;&gt;&amp;')
+      it 'escapes HTML characters in simple replacements' do
+        expect(replacement_escaped).to eq('Hello &lt;&quot;&#39;&gt;&amp;')
+      end
+
+      it 'escapes HTML characters in helpers' do
+        expect(helper_replacement_escaped).to eq('Hello (&lt;&quot;&#39;&gt;&amp;)')
       end
     end
 
@@ -367,7 +375,11 @@ describe Handlebars::Handlebars do
       let(:escaper) { Handlebars::Escapers::DummyEscaper }
 
       it 'escapes nothing' do
-        expect(escaped).to eq('Hello <"\'>&')
+        expect(replacement_escaped).to eq('Hello <"\'>&')
+      end
+
+      it 'escapes nothing in helpers' do
+        expect(helper_replacement_escaped).to eq('Hello (<"\'>&)')
       end
     end
 
@@ -382,7 +394,11 @@ describe Handlebars::Handlebars do
       let(:name) { 'Her Serene Highness' }
 
       it 'applies the escaping' do
-        expect(escaped).to eq('Hello H-er S-er-en-e H-ighn-ess')
+        expect(replacement_escaped).to eq('Hello H-er S-er-en-e H-ighn-ess')
+      end
+
+      it 'applies the escaping in helpers' do
+        expect(helper_replacement_escaped).to eq('Hello (H-er S-er-en-e H-ighn-ess)')
       end
     end
   end
