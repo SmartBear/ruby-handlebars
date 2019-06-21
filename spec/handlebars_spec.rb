@@ -17,6 +17,18 @@ describe Handlebars::Handlebars do
       expect(evaluate('Hello {{name}}', {name: 'world'})).to eq('Hello world')
     end
 
+    it 'a double braces replacement with unsafe characters' do
+      expect(evaluate('Hello {{name}}', {name: '<"\'>&'})).to eq('Hello &lt;&quot;&#39;&gt;&amp;')
+    end
+
+    it 'a double braces replacement with nil' do
+      expect(evaluate('Hello {{name}}', {name: nil})).to eq('Hello ')
+    end
+
+    it 'a triple braces replacement with unsafe characters' do
+      expect(evaluate('Hello {{{name}}}', {name: '<"\'>&'})).to eq('Hello <"\'>&')
+    end
+
     it 'allows values specified by methods' do
       expect(evaluate('Hello {{name}}', double(name: 'world'))).to eq('Hello world')
     end
@@ -60,7 +72,8 @@ describe Handlebars::Handlebars do
       it 'with multiple arguments, including strings' do
         hbs.register_helper('add') {|context, left, op, right| "#{left} #{op} #{right}"}
 
-        expect(evaluate("{{add left '&' right}}", {left: 'Law', right: 'Order'})).to eq("Law & Order")
+        expect(evaluate("{{add left '&' right}}", {left: 'Law', right: 'Order'})).to eq("Law &amp; Order")
+        expect(evaluate("{{{add left '&' right}}}", {left: 'Law', right: 'Order'})).to eq("Law & Order")
       end
 
       it 'with an empty string argument' do
