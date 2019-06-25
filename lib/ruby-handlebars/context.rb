@@ -21,8 +21,7 @@ module Handlebars
     end
 
     def add_items(hash)
-      return unless @data.respond_to? :merge!
-      @data.merge! hash
+      @locals.merge! hash
     end
 
     def save_special_variables
@@ -32,8 +31,7 @@ module Handlebars
     end
 
     def restore_special_variables variables
-      return unless @data.respond_to? :merge!
-      @data.merge! variables
+      @locals.merge! variables
     end
 
     private
