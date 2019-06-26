@@ -1,7 +1,7 @@
 ruby-handlebars changelog
 =========================
 
-0.1.1 (unreleased)
+0.1.1 (2019/6/26)
 ------------------
 
  - with_temporary_result returns the result produced by the block
