@@ -83,15 +83,13 @@ module Handlebars
             result = else_block.fn(context)
           end
         else
-          result = items.each_with_index.map do |item, index|
-            context.add_item(:this, item)
-            context.add_items :@index => index, :@first => (index == 0), :@last => (index == items.length-1)
-            block.fn(context)
-          end.join('')
+          context.with_temporary_context(:this => nil, :@index => 0, :@first => false, :@last => false) do
+            result = items.each_with_index.map do |item, index|
+              context.add_items(:this => item, :@index => index, :@first => (index == 0), :@last => (index == items.length - 1))
+              block.fn(context)
+            end.join('')
+          end
         end
-
-        context.add_item(:this, current_this)
-        context.restore_special_variables saved
         result
       end
     end
