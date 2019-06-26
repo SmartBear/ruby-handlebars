@@ -106,7 +106,6 @@ Limitations and roadmap
 This gem does not reuse the real Handlebars code (the JS one) and not everything is handled yet (but it will be someday ;) ):
 
  - the parser is not fully tested yet, it may complain with spaces ...
- - curly bracket are __not__ usable in the template content yet. one workaround is to create simple helpers to generate them
  - parsing errors are, well, not helpful at all
 
 Aknowledgements
