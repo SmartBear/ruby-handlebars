@@ -1,4 +1,7 @@
 module Handlebars
+  class UnknownHelper < StandardError
+  end
+
   module Tree
     class TreeItem < Struct
       def eval(context)
@@ -50,7 +53,9 @@ module Handlebars
 
     class Helper < TreeItem.new(:name, :parameters, :block)
       def _eval(context)
-        context.get_helper(name.to_s).apply(context, parameters, block)
+        helper = context.get_helper(name.to_s)
+        raise(UnknownHelper, "Helper \"#{name}\" does not exist" )if helper.nil?
+        helper.apply(context, parameters, block)
       end
     end
 

@@ -435,4 +435,16 @@ describe Handlebars::Handlebars do
       end
     end
   end
+
+  context 'regression tests' do
+    context 'when an unknown helper is called in a template' do
+      it 'should provide a useful error message with inline helpers' do
+        expect{ evaluate('{{unknown "This will hardly work" }}') }.to raise_exception(Handlebars::UnknownHelper, 'Helper "unknown" does not exist')
+      end
+
+      it 'should provide a useful error message with block helpers' do
+        expect{ evaluate('{{#unknown}}This will hardly work{{/unknown}}') }.to raise_exception(Handlebars::UnknownHelper, 'Helper "unknown" does not exist')
+      end
+    end
+  end
 end
