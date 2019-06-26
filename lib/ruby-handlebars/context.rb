@@ -3,11 +3,12 @@ module Handlebars
     def get(path)
       items = path.split('.'.freeze)
 
-      if @locals.key? items.first.to_sym
-        current = @locals
+      if locals.key? items.first.to_sym
+        current = locals
       else
         current = @data
       end
+
       until items.empty?
         current = get_attribute(current, items.shift)
       end
@@ -16,7 +17,23 @@ module Handlebars
     end
 
     def add_item(key, value)
-      @locals[key.to_sym] = value
+      locals[key.to_sym] = value
+    end
+
+    def add_items(hash)
+      hash.map { |k, v| add_item(k, v) }
+    end
+
+    def with_temporary_context(args = {})
+      saved = args.keys.collect { |key| [key, get(key.to_s)] }.to_h
+
+      add_items(args)
+      yield
+      locals.merge!(saved)
+    end
+
+    def locals
+      @locals ||= {}
     end
 
     private

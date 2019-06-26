@@ -12,7 +12,6 @@ module Handlebars
     def initialize()
       @helpers = {}
       @partials = {}
-      @locals = {}
       register_default_helpers
       set_escaper
     end
@@ -75,20 +74,18 @@ module Handlebars
 
     def register_each_helper
       register_helper('each') do |context, items, block, else_block|
-        current_this = context.get('this')
-
         if (items.nil? || items.empty?)
           if else_block
             result = else_block.fn(context)
           end
         else
-          result = items.map do |item|
-            context.add_item(:this, item)
-            block.fn(context)
-          end.join('')
+          context.with_temporary_context(:this => nil, :@index => 0, :@first => false, :@last => false) do
+            result = items.each_with_index.map do |item, index|
+              context.add_items(:this => item, :@index => index, :@first => (index == 0), :@last => (index == items.length - 1))
+              block.fn(context)
+            end.join('')
+          end
         end
-
-        context.add_item(:this, current_this)
         result
       end
     end

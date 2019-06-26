@@ -346,6 +346,39 @@ describe Handlebars::Handlebars do
         end
       end
     end
+
+    context 'special variables' do
+      it '@first' do
+        template = [
+          "{{#each items}}",
+          "{{this}}",
+          "{{#if @first}}",
+          " first",
+          "{{/if}}\n",
+          "{{/each}}"
+        ].join
+        expect(evaluate(template, {items: %w(a b c)})).to eq("a first\nb\nc\n")
+      end
+      it '@last' do
+        template = [
+          "{{#each items}}",
+          "{{this}}",
+          "{{#if @last}}",
+          " last",
+          "{{/if}}\n",
+          "{{/each}}"
+        ].join
+        expect(evaluate(template, {items: %w(a b c)})).to eq("a\nb\nc last\n")
+      end
+      it '@index' do
+        template = [
+          "{{#each items}}",
+          "{{this}} {{@index}}\n",
+          "{{/each}}"
+        ].join
+        expect(evaluate(template, {items: %w(a b c)})).to eq("a 0\nb 1\nc 2\n")
+      end
+    end
   end
 
   context 'escaping characters' do

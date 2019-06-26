@@ -16,7 +16,7 @@ module Handlebars
     rule(:tocurly)     { ocurly >> ocurly >> ocurly }
     rule(:tccurly)     { ccurly >> ccurly >> ccurly }
 
-    rule(:identifier)  { match['a-zA-Z0-9_\?'].repeat(1) }
+    rule(:identifier)  { match['@a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
     rule(:nocurly)     { match('[^{}]') }

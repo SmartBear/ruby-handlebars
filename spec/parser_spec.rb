@@ -36,6 +36,24 @@ describe Handlebars::Parser do
       })
     end
 
+    it 'special variables' do
+      expect(parser.parse('{{@first}}')).to eq({
+        block_items: [
+          {replaced_unsafe_item: '@first'}
+        ]
+      })
+      expect(parser.parse('{{@last}}')).to eq({
+        block_items: [
+          {replaced_unsafe_item: '@last'}
+        ]
+      })
+      expect(parser.parse('{{@index}}')).to eq({
+        block_items: [
+          {replaced_unsafe_item: '@index'}
+        ]
+      })
+    end
+
     it 'safe strings' do
       expect(parser.parse('{{{plic}}}')).to eq({
         block_items: [
