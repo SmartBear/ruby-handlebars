@@ -34,6 +34,14 @@ module Handlebars
       @locals.merge! variables
     end
 
+    def with_temporary_context(args = {})
+      saved = args.keys.collect { |key| [key, get(key.to_s)] }.to_h
+
+      add_items(args)
+      yield
+      restore_special_variables(saved)
+    end
+
     private
 
     def get_attribute(item, attribute)
