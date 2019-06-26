@@ -6,10 +6,10 @@ describe Handlebars::Context do
 
   context 'with_temporary_context' do
     before do
-      @locals = {
+      add_items(
         key: 'some key',
         value: 'some value'
-      }
+      )
     end
 
     it 'allows creating temporary variables' do
