@@ -3,8 +3,8 @@ module Handlebars
     def get(path)
       items = path.split('.'.freeze)
 
-      if @locals.key? items.first.to_sym
-        current = @locals
+      if locals.key? items.first.to_sym
+        current = locals
       else
         current = @data
       end
@@ -17,7 +17,7 @@ module Handlebars
     end
 
     def add_item(key, value)
-      @locals[key.to_sym] = value
+      locals[key.to_sym] = value
     end
 
     def add_items(hash)
@@ -29,7 +29,11 @@ module Handlebars
 
       add_items(args)
       yield
-      @locals.merge!(saved)
+      locals.merge!(saved)
+    end
+
+    def locals
+      @locals ||= {}
     end
 
     private

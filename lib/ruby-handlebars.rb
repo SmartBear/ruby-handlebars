@@ -12,7 +12,6 @@ module Handlebars
     def initialize()
       @helpers = {}
       @partials = {}
-      @locals = {}
       register_default_helpers
       set_escaper
     end
