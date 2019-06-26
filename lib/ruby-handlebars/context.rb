@@ -2,7 +2,6 @@ module Handlebars
   module Context
     def get(path)
       items = path.split('.'.freeze)
-
       if locals.key? items.first.to_sym
         current = locals
       else
@@ -32,11 +31,11 @@ module Handlebars
       locals.merge!(saved)
     end
 
+    private
+
     def locals
       @locals ||= {}
     end
-
-    private
 
     def get_attribute(item, attribute)
       sym_attr = attribute.to_sym
