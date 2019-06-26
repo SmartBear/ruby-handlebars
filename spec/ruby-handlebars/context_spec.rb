@@ -120,6 +120,10 @@ describe Handlebars::Context do
       expect(get('unknown_key')).to be nil
     end
 
+    it 'returns the data executed by the block' do
+      expect( with_temporary_context(value: 'A completelly new value') { 12 } ).to eq(12)
+    end
+
     context 'when data are stored in @data' do
       before do
         @data = {my_key: "With some value"}

@@ -27,8 +27,10 @@ module Handlebars
       saved = args.keys.collect { |key| [key, get(key.to_s)] }.to_h
 
       add_items(args)
-      yield
+      block_result = yield
       locals.merge!(saved)
+
+      block_result
     end
 
     private
