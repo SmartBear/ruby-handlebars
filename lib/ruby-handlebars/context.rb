@@ -21,17 +21,7 @@ module Handlebars
     end
 
     def add_items(hash)
-      @locals.merge! hash
-    end
-
-    def save_special_variables
-      %i( @first @last @index )
-        .collect {|key| [key, get(key.to_s)]}
-        .to_h
-    end
-
-    def restore_special_variables variables
-      @locals.merge! variables
+      hash.map { |k, v| add_item(k, v) }
     end
 
     def with_temporary_context(args = {})
@@ -39,7 +29,7 @@ module Handlebars
 
       add_items(args)
       yield
-      restore_special_variables(saved)
+      @locals.merge!(saved)
     end
 
     private

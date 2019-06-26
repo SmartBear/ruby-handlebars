@@ -75,9 +75,6 @@ module Handlebars
 
     def register_each_helper
       register_helper('each') do |context, items, block, else_block|
-        current_this = context.get('this')
-        saved = context.save_special_variables
-
         if (items.nil? || items.empty?)
           if else_block
             result = else_block.fn(context)
