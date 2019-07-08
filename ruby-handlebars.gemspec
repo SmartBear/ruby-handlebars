@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
     "lib/ruby-handlebars/template.rb",
     "lib/ruby-handlebars/tree.rb"
   ]
-  s.homepage = "https://github.com/vincent-psarga/ruby-handlebars".freeze
+  s.homepage = "https://github.com/smartbear/ruby-handlebars".freeze
   s.rubygems_version = "3.0.4".freeze
   s.summary = "Pure Ruby library for Handlebars templates".freeze
 
