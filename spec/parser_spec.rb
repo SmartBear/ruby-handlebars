@@ -19,16 +19,19 @@ describe Handlebars::Parser do
           {replaced_unsafe_item: 'plic'}
         ]
       })
+
       expect(parser.parse('{{ plic}}')).to eq({
         block_items: [
           {replaced_unsafe_item: 'plic'}
         ]
       })
+
       expect(parser.parse('{{plic }}')).to eq({
         block_items: [
           {replaced_unsafe_item: 'plic'}
         ]
       })
+
       expect(parser.parse('{{ plic }}')).to eq({
         block_items: [
           {replaced_unsafe_item: 'plic'}
@@ -235,8 +238,9 @@ describe Handlebars::Parser do
               helper_name: 'if',
               parameters: {parameter_name: 'something'},
               block_items: [
-                {template_content: 'Ok'},
-                {replaced_unsafe_item: 'else'},
+                {template_content: 'Ok'}
+              ],
+              else_block_items: [
                 {template_content: 'not ok'}
               ]
             }
@@ -259,6 +263,49 @@ describe Handlebars::Parser do
                   ]
                 },
                 {template_content: 'ploc'}
+              ]
+            }
+          ]
+        })
+      end
+
+      it 'imbricated block with elses' do
+        expect(parser.parse('{{#if something}}{{#if another_thing}}Case 1{{else}}Case 2{{/if}}{{else}}{{#if another_thing}}Case 3{{else}}Case 4{{/if}}{{/if}}')).to eq({
+          block_items: [
+            {
+              helper_name: "if",
+              parameters: {parameter_name: "something"},
+              block_items: [
+                {
+                  helper_name: "if",
+                  parameters: {parameter_name: "another_thing"},
+                  block_items:[
+                    {
+                      template_content:"Case 1"
+                    }
+                  ],
+                  else_block_items: [
+                    {
+                      template_content: "Case 2"
+                    }
+                  ]
+                }
+              ],
+              else_block_items: [
+                {
+                  helper_name: "if",
+                  parameters: {parameter_name: "another_thing"},
+                  block_items:[
+                    {
+                      template_content:"Case 3"
+                    }
+                  ],
+                  else_block_items: [
+                    {
+                      template_content: "Case 4"
+                    }
+                  ]
+                }
               ]
             }
           ]

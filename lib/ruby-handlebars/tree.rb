@@ -23,10 +23,6 @@ module Handlebars
           context.get_helper(item.to_s).apply(context)
         end
       end
-
-      def is_else?
-        item.to_s == 'else'
-      end
     end
 
     class EscapedReplacement < Replacement
@@ -51,11 +47,11 @@ module Handlebars
       end
     end
 
-    class Helper < TreeItem.new(:name, :parameters, :block)
+    class Helper < TreeItem.new(:name, :parameters, :block, :else_block)
       def _eval(context)
         helper = context.get_helper(name.to_s)
         raise(UnknownHelper, "Helper \"#{name}\" does not exist" )if helper.nil?
-        helper.apply(context, parameters, block)
+        helper.apply(context, parameters, block, else_block)
       end
     end
 
@@ -80,6 +76,7 @@ module Handlebars
       def add_item(i)
         items << i
       end
+
     end
   end
 
@@ -96,6 +93,7 @@ module Handlebars
     ) {
       Tree::EscapedHelper.new(name, parameters)
     }
+
     rule(
       safe_helper_name: simple(:name),
       parameters: subtree(:parameters)
@@ -105,20 +103,38 @@ module Handlebars
 
     rule(
       helper_name: simple(:name),
-      block_items: subtree(:block_items)
+      block_items: subtree(:block_items),
     ) {
       Tree::Helper.new(name, [], block_items)
     }
 
     rule(
       helper_name: simple(:name),
+      block_items: subtree(:block_items),
+      else_block_items: subtree(:else_block_items)
+    ) {
+      Tree::Helper.new(name, [], block_items, else_block_items)
+    }
+
+    rule(
+      helper_name: simple(:name),
       parameters: subtree(:parameters),
-      block_items: subtree(:block_items)
+      block_items: subtree(:block_items),
     ) {
       Tree::Helper.new(name, parameters, block_items)
     }
 
+    rule(
+      helper_name: simple(:name),
+      parameters: subtree(:parameters),
+      block_items: subtree(:block_items),
+      else_block_items: subtree(:else_block_items)
+    ) {
+      Tree::Helper.new(name, parameters, block_items, else_block_items)
+    }
+
     rule(partial_name: simple(:partial_name)) {Tree::Partial.new(partial_name)}
     rule(block_items: subtree(:block_items)) {Tree::Block.new(block_items)}
+    rule(else_block_items: subtree(:else_block_items)) {Tree::Block.new(block_items)}
   end
 end

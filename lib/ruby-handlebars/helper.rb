@@ -7,35 +7,27 @@ module Handlebars
       @fn = fn
     end
 
-    def apply(context, arguments = [], block = [])
+    def apply(context, arguments = [], block = [], else_block = [])
       arguments = [arguments] unless arguments.is_a? Array
-      args = [context] + arguments.map {|arg| arg.eval(context)} + split_block(block || [])
+      args = [context] + arguments.map {|arg| arg.eval(context)} + split_block(block, else_block)
 
       @fn.call(*args)
     end
 
-    def split_block(block)
-      helper_block = Tree::Block.new([])
-      inverse_block = Tree::Block.new([])
+    private
 
-      receiver = helper_block
-      else_found = false
-
-      block.each do |item|
-        if item.is_a?(Tree::Replacement) && item.is_else?
-          receiver = inverse_block
-          else_found = true
-          next
-        end
-
-        receiver.add_item(item)
-      end
-
-      if else_found
-        return [helper_block, inverse_block]
+    def split_block(block, else_block)
+      if else_block
+        [ensure_block(block), ensure_block(else_block)]
       else
-        return [helper_block]
+        [ensure_block(block)]
       end
+    end
+
+    def ensure_block(block)
+      new_block = Tree::Block.new([])
+      block.each {|item| new_block.add_item(item) } unless block.nil?
+      new_block
     end
   end
 end

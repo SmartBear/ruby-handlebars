@@ -16,7 +16,8 @@ module Handlebars
     rule(:tocurly)     { ocurly >> ocurly >> ocurly }
     rule(:tccurly)     { ccurly >> ccurly >> ccurly }
 
-    rule(:identifier)  { match['@a-zA-Z0-9_\?'].repeat(1) }
+    rule(:else_kw)     { str('else') }
+    rule(:identifier)  { (else_kw >> space? >> dccurly).absent? >> match['@a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
     rule(:nocurly)     { match('[^{}]') }
@@ -57,6 +58,9 @@ module Handlebars
       scope {
         block
       } >>
+      scope {
+        docurly >> space? >> else_kw >> space? >> dccurly >> scope { block_item.repeat.as(:else_block_items) }
+      }.maybe >>
       dynamic { |src, scope|
         docurly >> slash >> str(scope.captures[:helper_name]) >> dccurly
       }
@@ -71,7 +75,8 @@ module Handlebars
       dccurly
     }
 
-    rule(:block) { (template_content | unsafe_replacement | safe_replacement | helper | partial | block_helper ).repeat.as(:block_items) }
+    rule(:block_item) { (template_content | unsafe_replacement | safe_replacement | helper | partial | block_helper ) }
+    rule(:block) { block_item.repeat.as(:block_items) }
 
     root :block
   end

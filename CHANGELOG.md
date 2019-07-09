@@ -1,10 +1,15 @@
 ruby-handlebars changelog
 =========================
 
+0.2.0 (unreleased)
+------------------
+
+ - "else" keyword is now handled by the parser directly
+
 0.1.1 (2019/6/26)
 ------------------
 
- - with_temporary_result returns the result produced by the block
+ - with_temporary_context returns the result produced by the block
 
 0.1.0 (2019/6/26)
 -----------------

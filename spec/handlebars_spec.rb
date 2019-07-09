@@ -138,6 +138,10 @@ describe Handlebars::Handlebars do
         data = {company: {people: ['a', 'b', 'c']}}
         expect(evaluate("{{#each company.people}}{{{this}}}{{/each}}", data)).to eq('abc')
       end
+
+      it 'a else keyword out of a helper will raise an error' do
+        expect { evaluate('My {{ else }} template') }.to raise_exception(Parslet::ParseFailed)
+      end
     end
 
     context 'default helpers' do
