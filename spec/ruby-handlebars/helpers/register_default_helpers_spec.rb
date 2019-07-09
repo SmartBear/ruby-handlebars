@@ -18,6 +18,8 @@ describe Handlebars::Helpers do
         .with('if')
         .once
         .with('each')
+        .once
+        .with('helperMissing')
     end
   end
 end

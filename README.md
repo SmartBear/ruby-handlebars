@@ -100,6 +100,16 @@ template = [
 ].join("\n")
 ```
 
+Currently, if you call an unknown helper, it will raise an exception. You can override that by registering your own version of the ``helperMissing`` helper. Note that only the name of the missing helper will be provided.
+
+For example:
+
+```ruby
+hbs.register_helper('helperMissing') do |context, name|
+  puts "No helper found with name #{name}"
+end
+```
+
 Limitations and roadmap
 -----------------------
 
