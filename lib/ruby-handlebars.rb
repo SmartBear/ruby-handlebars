@@ -2,6 +2,7 @@ require_relative 'ruby-handlebars/parser'
 require_relative 'ruby-handlebars/tree'
 require_relative 'ruby-handlebars/template'
 require_relative 'ruby-handlebars/helper'
+require_relative 'ruby-handlebars/helpers/register_default_helpers'
 require_relative 'ruby-handlebars/escapers/html_escaper'
 
 module Handlebars
@@ -54,40 +55,7 @@ module Handlebars
     end
 
     def register_default_helpers
-      register_if_helper
-      register_each_helper
-    end
-
-    def register_if_helper
-      register_helper('if') do |context, condition, block, else_block|
-        condition = !condition.empty? if condition.respond_to?(:empty?)
-
-        if condition
-          block.fn(context)
-        elsif else_block
-          else_block.fn(context)
-        else
-          ""
-        end
-      end
-    end
-
-    def register_each_helper
-      register_helper('each') do |context, items, block, else_block|
-        if (items.nil? || items.empty?)
-          if else_block
-            result = else_block.fn(context)
-          end
-        else
-          context.with_temporary_context(:this => nil, :@index => 0, :@first => false, :@last => false) do
-            result = items.each_with_index.map do |item, index|
-              context.add_items(:this => item, :@index => index, :@first => (index == 0), :@last => (index == items.length - 1))
-              block.fn(context)
-            end.join('')
-          end
-        end
-        result
-      end
+      Helpers.register_default_helpers(self)
     end
   end
 end
