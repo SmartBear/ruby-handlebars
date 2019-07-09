@@ -1,13 +1,17 @@
+require_relative 'default_helper'
+
 module Handlebars
   class UnknownHelper < StandardError
   end
 
   module Helpers
-    class HelperMissingHelper
-      def self.register(hbs)
-        hbs.register_helper('helperMissing') do |context, name|
-          raise(::Handlebars::UnknownHelper, "Helper \"#{name}\" does not exist" )
-        end
+    class HelperMissingHelper < DefaultHelper
+      def self.registry_name
+        'helperMissing'
+      end
+
+      def self.apply(context, name, block, else_block)
+        raise(::Handlebars::UnknownHelper, "Helper \"#{name}\" does not exist" )
       end
     end
   end
