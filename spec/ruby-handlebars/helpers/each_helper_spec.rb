@@ -1,10 +1,14 @@
 require_relative '../../spec_helper'
 
 require_relative '../../../lib/ruby-handlebars'
+require_relative '../../../lib/ruby-handlebars/tree'
 require_relative '../../../lib/ruby-handlebars/helpers/each_helper'
 
 
 describe Handlebars::Helpers::EachHelper do
+  let(:subject) { Handlebars::Helpers::EachHelper }
+  let(:hbs) {Handlebars::Handlebars.new}
+
   context '.register' do
     it 'registers the "each" helper' do
       hbs = double(Handlebars::Handlebars)
@@ -19,9 +23,55 @@ describe Handlebars::Helpers::EachHelper do
     end
   end
 
-  context 'integration' do
-    let(:hbs) {Handlebars::Handlebars.new}
+  context '.apply' do
+    let (:block) { double(Handlebars::Tree::Block.new([])) }
+    let(:else_block) { double(Handlebars::Tree::Block.new([])) }
+    let(:values) { [Handlebars::Tree::String.new('a'), Handlebars::Tree::String.new('b'), Handlebars::Tree::String.new('c') ]}
 
+    before do
+      allow(block).to receive(:fn)
+      allow(else_block).to receive(:fn)
+    end
+
+    it 'applies the block on all values' do
+      subject.apply(hbs, values, block, else_block)
+
+      expect(block).to have_received(:fn).exactly(3).times
+      expect(else_block).not_to have_received(:fn)
+    end
+
+    context 'when values is nil' do
+      let(:values) { nil }
+
+      it 'uses the else_block if provided' do
+        subject.apply(hbs, values, block, else_block)
+
+        expect(block).not_to have_received(:fn)
+        expect(else_block).to have_received(:fn).once
+      end
+
+      it 'returns nil if no else_block is provided' do
+        expect(subject.apply(hbs, values, block, nil)).to be nil
+      end
+    end
+
+    context 'when values is empty' do
+      let(:values) { [] }
+
+      it 'uses the else_block if provided' do
+        subject.apply(hbs, values, block, else_block)
+
+        expect(block).not_to have_received(:fn)
+        expect(else_block).to have_received(:fn).once
+      end
+
+      it 'returns nil if no else_block is provided' do
+        expect(subject.apply(hbs, values, block, nil)).to be nil
+      end
+    end
+  end
+
+  context 'integration' do
     def evaluate(template, args = {})
       hbs.compile(template).call(args)
     end
