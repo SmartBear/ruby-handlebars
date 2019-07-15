@@ -21,6 +21,19 @@ describe Handlebars::Helpers::IfHelper do
     it_behaves_like "a helper running the else block", "an empty string", ""
     it_behaves_like "a helper running the else block", "an empty list", []
     it_behaves_like "a helper running the else block", "an empty hash", {}
+
+    context 'when else_block is not present' do
+      include_context "shared apply helper"
+      let(:params) { false }
+      let(:else_block) { nil }
+
+      it 'returns an empty-string' do
+        expect(subject.apply(hbs, params, block, else_block)).to eq("")
+
+        expect(block).not_to have_received(:fn)
+        expect(else_block).not_to have_received(:fn)
+      end
+    end
   end
 
   context 'integration' do

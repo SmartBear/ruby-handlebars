@@ -4,6 +4,7 @@ ruby-handlebars changelog
 0.2.0 (unreleased)
 ------------------
 
+ - add "unless" helper
  - add "helperMissing" helper, called when a helper is missing
  - "else" keyword is now handled by the parser directly
 
