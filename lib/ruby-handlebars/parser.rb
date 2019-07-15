@@ -10,6 +10,8 @@ module Handlebars
     rule(:slash)       { str('/')}
     rule(:ocurly)      { str('{')}
     rule(:ccurly)      { str('}')}
+    rule(:pipe)        { str('|')}
+
 
     rule(:docurly)     { ocurly >> ocurly }
     rule(:dccurly)     { ccurly >> ccurly }
@@ -17,6 +19,8 @@ module Handlebars
     rule(:tccurly)     { ccurly >> ccurly >> ccurly }
 
     rule(:else_kw)     { str('else') }
+    rule(:as_kw)       { str('as') }
+
     rule(:identifier)  { (else_kw >> space? >> dccurly).absent? >> match['@\-a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> (identifier | else_kw)).repeat }
 
@@ -38,8 +42,11 @@ module Handlebars
     rule(:string)      { sq_string | dq_string }
 
     rule(:parameter)   {
-      (path | string).as(:parameter_name) |
-      (str('(') >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> str(')'))
+      (as_kw >> space? >> pipe).absent? >>
+      (
+        (path | string).as(:parameter_name) |
+        (str('(') >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> str(')'))
+      )
     }
     rule(:parameters)  { parameter >> (space >> parameter).repeat }
 
@@ -47,6 +54,25 @@ module Handlebars
     rule(:safe_helper) { tocurly >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> tccurly }
 
     rule(:helper) { unsafe_helper | safe_helper }
+
+    rule(:as_block_helper) {
+      docurly >>
+      hash >>
+      identifier.capture(:helper_name).as(:helper_name) >>
+      space >> parameters.as(:parameters) >>
+      space >> as_kw >> space >> pipe >> space? >> parameters.as(:as_parameters) >> space? >> pipe >>
+      space? >>
+      dccurly >>
+      scope {
+        block
+      } >>
+      scope {
+        docurly >> space? >> else_kw >> space? >> dccurly >> scope { block_item.repeat.as(:else_block_items) }
+      }.maybe >>
+      dynamic { |src, scope|
+        docurly >> slash >> str(scope.captures[:helper_name]) >> dccurly
+      }
+    }
 
     rule(:block_helper) {
       docurly >>
@@ -75,7 +101,7 @@ module Handlebars
       dccurly
     }
 
-    rule(:block_item) { (template_content | unsafe_replacement | safe_replacement | helper | partial | block_helper ) }
+    rule(:block_item) { (template_content | unsafe_replacement | safe_replacement | helper | partial | block_helper | as_block_helper) }
     rule(:block) { block_item.repeat.as(:block_items) }
 
     root :block

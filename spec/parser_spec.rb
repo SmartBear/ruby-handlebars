@@ -216,6 +216,68 @@ describe Handlebars::Parser do
       end
     end
 
+    context 'as helpers' do
+      it 'recognizes the "as |...|" writing' do
+        expect(parser.parse('{{#each items as |item|}}plic{{/each}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'each',
+              parameters: {parameter_name: 'items'},
+              as_parameters: {parameter_name: 'item'},
+              block_items: [
+                {template_content: 'plic'}
+              ]
+            }
+          ]
+        })
+      end
+
+      it 'supports the "else" statement' do
+        expect(parser.parse('{{#each items as |item|}}plic{{else}}Hummm, empty{{/each}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'each',
+              parameters: {parameter_name: 'items'},
+              as_parameters: {parameter_name: 'item'},
+              block_items: [
+                {template_content: 'plic'}
+              ],
+              else_block_items: [
+                {template_content: 'Hummm, empty'}
+              ]
+            }
+          ]
+        })
+      end
+
+      it 'can be imbricated' do
+        expect(parser.parse('{{#each items as |item|}}{{#each item as |char index|}}show item{{/each}}{{else}}Hummm, empty{{/each}}')).to eq({
+          block_items: [
+            {
+              helper_name: 'each',
+              parameters: {parameter_name: 'items'},
+              as_parameters: {parameter_name: 'item'},
+              block_items: [
+                {
+                  helper_name: 'each',
+                  parameters: {parameter_name: 'item'},
+                  as_parameters: [
+                    {parameter_name: 'char'},
+                    {parameter_name: 'index'}],
+                  block_items: [
+                    {template_content: 'show item'}
+                  ]
+                }
+              ],
+              else_block_items: [
+                {template_content: 'Hummm, empty'}
+              ]
+            }
+          ]
+        })
+      end
+    end
+
     context 'if block' do
       it 'simple' do
         expect(parser.parse('{{#if something}}show something else{{/if}}')).to eq({
