@@ -1,4 +1,5 @@
 require_relative '../../spec_helper'
+require_relative './shared'
 
 require_relative '../../../lib/ruby-handlebars'
 require_relative '../../../lib/ruby-handlebars/tree'
@@ -9,19 +10,7 @@ describe Handlebars::Helpers::HelperMissingHelper do
   let(:subject) { Handlebars::Helpers::HelperMissingHelper }
   let(:hbs) { Handlebars::Handlebars.new }
 
-  context '.register' do
-    it 'registers the "helperMissing" helper' do
-      hbs = double(Handlebars::Handlebars)
-      allow(hbs).to receive(:register_helper)
-
-      Handlebars::Helpers::HelperMissingHelper.register(hbs)
-
-      expect(hbs)
-        .to have_received(:register_helper)
-        .once
-        .with('helperMissing')
-    end
-  end
+  it_behaves_like "a registerable helper", "helperMissing"
 
   context '.apply' do
     let(:name) { "missing_helper" }
@@ -32,9 +21,7 @@ describe Handlebars::Helpers::HelperMissingHelper do
   end
 
   context 'integration' do
-    def evaluate(template, args = {})
-      hbs.compile(template).call(args)
-    end
+    include_context "shared helpers integration tests"
 
     context 'is called when an unknown helper is called in a template' do
       it 'should provide a useful error message with inline helpers' do

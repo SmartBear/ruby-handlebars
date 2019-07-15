@@ -1,4 +1,5 @@
 require_relative '../../spec_helper'
+require_relative './shared'
 
 require_relative '../../../lib/ruby-handlebars'
 require_relative '../../../lib/ruby-handlebars/tree'
@@ -9,29 +10,12 @@ describe Handlebars::Helpers::EachHelper do
   let(:subject) { Handlebars::Helpers::EachHelper }
   let(:hbs) {Handlebars::Handlebars.new}
 
-  context '.register' do
-    it 'registers the "each" helper' do
-      hbs = double(Handlebars::Handlebars)
-      allow(hbs).to receive(:register_helper)
-
-      Handlebars::Helpers::EachHelper.register(hbs)
-
-      expect(hbs)
-        .to have_received(:register_helper)
-        .once
-        .with('each')
-    end
-  end
+    it_behaves_like "a registerable helper", "each"
 
   context '.apply' do
-    let (:block) { double(Handlebars::Tree::Block.new([])) }
-    let(:else_block) { double(Handlebars::Tree::Block.new([])) }
-    let(:values) { [Handlebars::Tree::String.new('a'), Handlebars::Tree::String.new('b'), Handlebars::Tree::String.new('c') ]}
+    include_context "shared apply helper"
 
-    before do
-      allow(block).to receive(:fn)
-      allow(else_block).to receive(:fn)
-    end
+    let(:values) { [Handlebars::Tree::String.new('a'), Handlebars::Tree::String.new('b'), Handlebars::Tree::String.new('c') ]}
 
     it 'applies the block on all values' do
       subject.apply(hbs, values, block, else_block)
@@ -72,9 +56,7 @@ describe Handlebars::Helpers::EachHelper do
   end
 
   context 'integration' do
-    def evaluate(template, args = {})
-      hbs.compile(template).call(args)
-    end
+    include_context "shared helpers integration tests"
 
     let(:ducks) {[{name: 'Huey'}, {name: 'Dewey'}, {name: 'Louis'}]}
 
