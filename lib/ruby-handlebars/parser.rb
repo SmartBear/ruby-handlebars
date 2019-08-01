@@ -17,7 +17,7 @@ module Handlebars
     rule(:tccurly)     { ccurly >> ccurly >> ccurly }
 
     rule(:else_kw)     { str('else') }
-    rule(:identifier)  { (else_kw >> space? >> dccurly).absent? >> match['@a-zA-Z0-9_\?'].repeat(1) }
+    rule(:identifier)  { (else_kw >> space? >> dccurly).absent? >> match['@\-a-zA-Z0-9_\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> identifier).repeat }
 
     rule(:nocurly)     { match('[^{}]') }
