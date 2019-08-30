@@ -1,12 +1,12 @@
 ruby-handlebars changelog
 =========================
 
-0.2.1 (Unreleased)
+[Unreleased] (2019/8/30)
 ------------------
 
  - allow "else" word as being part of a path (eg: {{ my.something.else }} is okay)
 
-0.2.0 (2019/8/30)
+[0.2.0] (2019/8/30)
 -----------------
 
  - allow dash in identifiers ([#15](https://github.com/vincent-psarga/ruby-handlebars/pull/15) - [@stewartmckee])
@@ -14,12 +14,12 @@ ruby-handlebars changelog
  - add "helperMissing" helper, called when a helper is missing
  - "else" keyword is now handled by the parser directly
 
-0.1.1 (2019/6/26)
+[0.1.1] (2019/6/26)
 ------------------
 
  - with_temporary_context returns the result produced by the block
 
-0.1.0 (2019/6/26)
+[0.1.0] (2019/6/26)
 -----------------
 
  - add 'with_temporary_context' in context to define temporary variables
@@ -35,3 +35,9 @@ ruby-handlebars changelog
 [@stewartmckee]:  https://github.com/stewartmckee
 [@schuetzm]:      https://github.com/schuetzm
 [@mvz]:           https://github.com/mvz
+
+<!-- Releases diffs -->
+[Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.2.0...master
+[0.2.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.1...v0.2.0
+[0.1.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.0...v0.1.1
+[0.1.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.0.6...v0.1.0
