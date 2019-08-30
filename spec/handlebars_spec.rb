@@ -146,6 +146,10 @@ describe Handlebars::Handlebars do
       it 'a else keyword out of a helper will raise an error' do
         expect { evaluate('My {{ else }} template') }.to raise_exception(Parslet::ParseFailed)
       end
+
+      it '"else" can be part of a path' do
+        expect(evaluate('My {{ something.else }} template', { something: { else: 'awesome' }})).to eq('My awesome template')
+      end
     end
   end
 

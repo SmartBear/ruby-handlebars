@@ -1,8 +1,13 @@
 ruby-handlebars changelog
 =========================
 
-0.2.0 (unreleased)
+0.2.1 (Unreleased)
 ------------------
+
+ - allow "else" word as being part of a path (eg: {{ my.something.else }} is okay)
+
+0.2.0 (2019/8/30)
+-----------------
 
  - allow dash in identifiers ([#15](https://github.com/vincent-psarga/ruby-handlebars/pull/15) - [@stewartmckee])
  - add "unless" helper
