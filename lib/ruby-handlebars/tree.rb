@@ -55,6 +55,17 @@ module Handlebars
       end
     end
 
+    class AsHelper < TreeItem.new(:name, :parameters, :as_parameters, :block, :else_block)
+      def _eval(context)
+        helper = context.get_as_helper(name.to_s)
+        if helper.nil?
+          context.get_helper('helperMissing').apply(context, String.new(name.to_s))
+        else
+          helper.apply_as(context, parameters, as_parameters, block, else_block)
+        end
+      end
+    end
+
     class EscapedHelper < Helper
       def _eval(context)
         context.escaper.escape(super(context).to_s)
@@ -131,6 +142,25 @@ module Handlebars
       else_block_items: subtree(:else_block_items)
     ) {
       Tree::Helper.new(name, parameters, block_items, else_block_items)
+    }
+
+    rule(
+      helper_name: simple(:name),
+      parameters: subtree(:parameters),
+      as_parameters: subtree(:as_parameters),
+      block_items: subtree(:block_items),
+    ) {
+      Tree::AsHelper.new(name, parameters, as_parameters, block_items)
+    }
+
+    rule(
+      helper_name: simple(:name),
+      parameters: subtree(:parameters),
+      as_parameters: subtree(:as_parameters),
+      block_items: subtree(:block_items),
+      else_block_items: subtree(:else_block_items)
+    ) {
+      Tree::AsHelper.new(name, parameters, as_parameters, block_items, else_block_items)
     }
 
     rule(partial_name: simple(:partial_name)) {Tree::Partial.new(partial_name)}

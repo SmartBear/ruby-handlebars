@@ -11,6 +11,7 @@ module Handlebars
     attr_reader :escaper
 
     def initialize()
+      @as_helpers = {}
       @helpers = {}
       @partials = {}
       register_default_helpers
@@ -25,8 +26,16 @@ module Handlebars
       @helpers[name.to_s] = Helper.new(self, fn)
     end
 
+    def register_as_helper(name, &fn)
+      @as_helpers[name.to_s] = Helper.new(self, fn)
+    end
+
     def get_helper(name)
       @helpers[name.to_s]
+    end
+
+    def get_as_helper(name)
+      @as_helpers[name.to_s]
     end
 
     def register_partial(name, content)

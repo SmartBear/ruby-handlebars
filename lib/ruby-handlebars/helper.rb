@@ -14,6 +14,14 @@ module Handlebars
       @fn.call(*args)
     end
 
+    def apply_as(context, arguments = [], as_arguments = [], block = [], else_block = [])
+      arguments = [arguments] unless arguments.is_a? Array
+      as_arguments = [as_arguments] unless as_arguments.is_a? Array
+      args = [context] + arguments.map {|arg| arg.eval(context)} + as_arguments.map(&:name) + split_block(block, else_block)
+
+      @fn.call(*args)
+    end
+
     private
 
     def split_block(block, else_block)

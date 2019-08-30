@@ -151,6 +151,32 @@ describe Handlebars::Handlebars do
         expect(evaluate('My {{ something.else }} template', { something: { else: 'awesome' }})).to eq('My awesome template')
       end
     end
+
+    context 'as_helpers' do
+      it 'can be used to have names parameters inside the block' do
+        hbs.register_as_helper('test_with') do |context, value, name, block|
+          context.with_temporary_context(name => value) do
+            block.fn(context)
+          end
+        end
+
+        expect(evaluate("{{#test_with name as |duck|}}Duck name is: {{duck}}{{/test_with}}", {name: "Dewey"})).to eq('Duck name is: Dewey')
+      end
+
+      it 'can have multiple "as" parameters' do
+        hbs.register_as_helper('test_with') do |context, value1, value2, name1, name2, block|
+          mapping = {}
+          mapping[name1] = value1
+          mapping[name2] = value2
+
+          context.with_temporary_context(mapping) do
+            block.fn(context)
+          end
+        end
+
+        expect(evaluate("{{#test_with name1 name2 as |duck1 duck2|}}Duck names are {{duck1}} and {{duck2}}{{/test_with}}", {name1: "Huey", name2: "Dewey"})).to eq('Duck names are Huey and Dewey')
+      end
+    end
   end
 
   context 'escaping characters' do
