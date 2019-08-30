@@ -4,6 +4,7 @@ ruby-handlebars changelog
 0.2.0 (unreleased)
 ------------------
 
+ - allow dash in identifiers ([#15](https://github.com/vincent-psarga/ruby-handlebars/pull/15) - [@stewartmckee])
  - add "unless" helper
  - add "helperMissing" helper, called when a helper is missing
  - "else" keyword is now handled by the parser directly
@@ -17,10 +18,15 @@ ruby-handlebars changelog
 -----------------
 
  - add 'with_temporary_context' in context to define temporary variables
- - enable @index, @first and @last variables in "each" helper (https://github.com/vincent-psarga/ruby-handlebars/pull/10 - @schuetzm)
+ - enable @index, @first and @last variables in "each" helper ([#10](https://github.com/vincent-psarga/ruby-handlebars/pull/10) - [@schuetzm])
  - allow specifying escaper when using double curly braces
- - allow using helper calls as arguments (https://github.com/vincent-psarga/ruby-handlebars/pull/11 - @schuetzm)
- - escape trice-braces replacements (https://github.com/vincent-psarga/ruby-handlebars/pull/9 - @schuetzm)
- - allow non-hash data (https://github.com/vincent-psarga/ruby-handlebars/pull/8 - @mvz)
- - allow single curly braces in content (https://github.com/vincent-psarga/ruby-handlebars/pull/7 - @mvz)
- - allow empty literal string arguments (https://github.com/vincent-psarga/ruby-handlebars/pull/6 - @mvz)
+ - allow using helper calls as arguments ([#11](https://github.com/vincent-psarga/ruby-handlebars/pull/11) - [@schuetzm])
+ - escape trice-braces replacements ([#9](https://github.com/vincent-psarga/ruby-handlebars/pull/9) - [@schuetzm])
+ - allow non-hash data ([#8](https://github.com/vincent-psarga/ruby-handlebars/pull/8) - [@mvz])
+ - allow single curly braces in content ([#7](https://github.com/vincent-psarga/ruby-handlebars/pull/7) - [@mvz])
+ - allow empty literal string arguments ([pr6]https://github.com/vincent-psarga/ruby-handlebars/pull/6) - [@mvz])
+
+<!-- Contributors lists -->
+[@stewartmckee]:  https://github.com/stewartmckee
+[@schuetzm]:      https://github.com/schuetzm
+[@mvz]:           https://github.com/mvz
