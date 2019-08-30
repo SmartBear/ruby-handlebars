@@ -47,6 +47,10 @@ describe Handlebars::Handlebars do
       expect(evaluate('My simple template: {{person.name}}', {person: {name: 'Another name'}})).to eq('My simple template: Another name')
     end
 
+    it 'handles a parameter with a dash' do
+      expect(evaluate('Hello {{first-name}}', double("first-name": 'world'))).to eq('Hello world')
+    end
+
     context 'partials' do
       it 'simple' do
         hbs.register_partial('plic', "Plic")
