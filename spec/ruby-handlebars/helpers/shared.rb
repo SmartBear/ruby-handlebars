@@ -21,6 +21,7 @@ shared_examples "a registerable helper" do |name|
   it "registers the \"#{name}\" helper" do
     hbs = double(Handlebars::Handlebars)
     allow(hbs).to receive(:register_helper)
+    allow(hbs).to receive(:register_as_helper)
 
     subject.register(hbs)
 

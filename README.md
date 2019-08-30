@@ -82,22 +82,49 @@ hbs.compile(template).call({description: my_description})
 # Output will depend on the validity of the 'my_description' variable
 ```
 
-Two default helpers are provided: ``each`` and ``if``. It is not yet possible to name the current item in an each loop and ``this`` must be used to reference it.
+Default helpers:
+----------------
 
-```ruby
-template = [
-  "{{#each items}}",
-  "  {{{ this }}}",
-  "{{else}}",
-  "  No items",
-  "{{/each}}",
-  "",
-  "{{#if my_condition}}",
-  "  It's ok",
-  "{{else}}",
-  "  or maybe not",
-  "{{/if}}",
-].join("\n")
+Three default helpers are provided: ``each``, ``if`` and ``unless``.
+
+The each helper let you walk through a list. You can either use the basic notation and referencing the current item as ``this``:
+
+```
+  {{#each items}}
+    {{{ this }}}
+  {{else}}
+    No items
+  {{/each}}
+```
+
+or the "as |name|" notation:
+
+```
+  {{#each items as |item| }}
+    {{{ item }}}
+  {{else}}
+    No items
+  {{/each}}
+```
+
+The ``if`` helper can be used to write conditionnal templates:
+
+```
+  {{#if my_condition}}
+    It's ok
+  {{else}}
+    or maybe not
+  {{/if}}
+```
+
+The ``unless`` helper works the opposite way to ``if``:
+
+```
+  {{#unless my_condition}}
+    It's not ok
+  {{else}}
+    or maybe it is
+  {{/unless}}
 ```
 
 Currently, if you call an unknown helper, it will raise an exception. You can override that by registering your own version of the ``helperMissing`` helper. Note that only the name of the missing helper will be provided.
@@ -124,4 +151,4 @@ Aknowledgements
 This gem would simply not exist if the handlebars team was not here. Thanks a lot for this awesome templating system.
 Thanks a lot to @cowboyd for the [handlebars.rb](https://github.com/cowboyd/handlebars.rb) gem. We used it for a while and it's great (and as told at the beginning of the README, if you do not need any Windows support, use handlebars.rb instead ;) )
 
-Thanks a lot to the contributors @mvz and @schuetzm for making it a way better Handlebars renderer :)
+Thanks a lot to the contributors @mvz, @schuetzm and @stewartmckee for making it a way better Handlebars renderer :)

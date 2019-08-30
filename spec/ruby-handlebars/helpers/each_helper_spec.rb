@@ -10,7 +10,7 @@ describe Handlebars::Helpers::EachHelper do
   let(:subject) { Handlebars::Helpers::EachHelper }
   let(:hbs) {Handlebars::Handlebars.new}
 
-    it_behaves_like "a registerable helper", "each"
+  it_behaves_like "a registerable helper", "each"
 
   context '.apply' do
     include_context "shared apply helper"
@@ -247,6 +247,84 @@ describe Handlebars::Helpers::EachHelper do
         ].join
         expect(evaluate(template, {items: %w(a b c)})).to eq("a 0\nb 1\nc 2\n")
       end
+    end
+  end
+
+  context 'integration with "as |value|" notation' do
+    include_context "shared helpers integration tests"
+
+    let(:ducks) {[{name: 'Huey'}, {name: 'Dewey'}, {name: 'Louis'}]}
+
+    it 'simple case' do
+      template = [
+        "<ul>",
+        "{{#each items as |item|}}  <li>{{item.name}}</li>",
+        "{{/each}}</ul>"
+      ].join("\n")
+
+      data = {items: ducks}
+      expect(evaluate(template, data)).to eq([
+        "<ul>",
+        "  <li>Huey</li>",
+        "  <li>Dewey</li>",
+        "  <li>Louis</li>",
+        "</ul>"
+      ].join("\n"))
+    end
+
+    it 'imbricated' do
+      data = {people: [
+        {
+          name: 'Huey',
+          email: 'huey@junior-woodchucks.example.com',
+          phones: ['1234', '5678'],
+        },
+        {
+          name: 'Dewey',
+          email: 'dewey@junior-woodchucks.example.com',
+          phones: ['4321'],
+        }
+      ]}
+
+      template = [
+        "People:",
+        "<ul>",
+        "  {{#each people as |person| }}",
+        "  <li>",
+        "    <ul>",
+        "      <li>Name: {{person.name}}</li>",
+        "      <li>Phones: {{#each person.phones as |phone|}} {{phone}} {{/each}}</li>",
+        "      <li>email: {{person.email}}</li>",
+        "    </ul>",
+        "  </li>",
+        "  {{else}}",
+        "  <li>No one to display</li>",
+        "  {{/each}}",
+        "</ul>"
+      ].join("\n")
+
+      expect(evaluate(template, data)).to eq([
+        "People:",
+        "<ul>",
+        "  ",
+        "  <li>",
+        "    <ul>",
+        "      <li>Name: Huey</li>",
+        "      <li>Phones:  1234  5678 </li>",
+        "      <li>email: huey@junior-woodchucks.example.com</li>",
+        "    </ul>",
+        "  </li>",
+        "  ",
+        "  <li>",
+        "    <ul>",
+        "      <li>Name: Dewey</li>",
+        "      <li>Phones:  4321 </li>",
+        "      <li>email: dewey@junior-woodchucks.example.com</li>",
+        "    </ul>",
+        "  </li>",
+        "  ",
+        "</ul>"
+      ].join("\n"))
     end
   end
 end
