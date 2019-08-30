@@ -1,7 +1,7 @@
 ruby-handlebars changelog
 =========================
 
-[Unreleased]
+[0.2.1] (2019/8/30)
 ------------
 
  - allow "else" word as being part of a path (eg: {{ my.something.else }} is okay)
@@ -37,7 +37,7 @@ ruby-handlebars changelog
 [@mvz]:           https://github.com/mvz
 
 <!-- Releases diffs -->
-[Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.2.0...master
+[0.2.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.0...v0.2.1
 [0.2.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.1...v0.2.0
 [0.1.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.0...v0.1.1
 [0.1.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.0.6...v0.1.0
