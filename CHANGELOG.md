@@ -1,8 +1,8 @@
 ruby-handlebars changelog
 =========================
 
-[Unreleased] (2019/8/30)
-------------------
+[Unreleased]
+------------
 
  - allow "else" word as being part of a path (eg: {{ my.something.else }} is okay)
 
