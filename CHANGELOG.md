@@ -4,7 +4,7 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
- - Nothing changed yet
+ - Support helpers with "as" notation (`{{each items as |item|}}`)
 
 [0.2.1] (2019/8/30)
 ------------
