@@ -1,6 +1,11 @@
 ruby-handlebars changelog
 =========================
 
+[Unreleased]
+------------
+
+ - Nothing done yet
+
 [0.3.0] (2019/10/11)
 --------------------
 
