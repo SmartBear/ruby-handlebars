@@ -1,18 +1,18 @@
 ruby-handlebars changelog
 =========================
 
-[Unreleased]
-------------
+[0.3.0] (2019/10/11)
+--------------------
 
  - Support helpers with "as" notation (`{{each items as |item|}}`)
 
 [0.2.1] (2019/8/30)
-------------
+-------------------
 
  - allow "else" word as being part of a path (eg: {{ my.something.else }} is okay)
 
 [0.2.0] (2019/8/30)
------------------
+-------------------
 
  - allow dash in identifiers ([#15](https://github.com/vincent-psarga/ruby-handlebars/pull/15) - [@stewartmckee])
  - add "unless" helper
@@ -20,12 +20,12 @@ ruby-handlebars changelog
  - "else" keyword is now handled by the parser directly
 
 [0.1.1] (2019/6/26)
-------------------
+-------------------
 
  - with_temporary_context returns the result produced by the block
 
 [0.1.0] (2019/6/26)
------------------
+-------------------
 
  - add 'with_temporary_context' in context to define temporary variables
  - enable @index, @first and @last variables in "each" helper ([#10](https://github.com/vincent-psarga/ruby-handlebars/pull/10) - [@schuetzm])
@@ -42,7 +42,8 @@ ruby-handlebars changelog
 [@mvz]:           https://github.com/mvz
 
 <!-- Releases diffs -->
-[Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.2.1...master
+[Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.3.0...master
+[0.3.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.1...v0.3.0
 [0.2.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.0...v0.2.1
 [0.2.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.1...v0.2.0
 [0.1.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.0...v0.1.1
