@@ -78,6 +78,13 @@ module Handlebars
       end
     end
 
+    class PartialWithArgs < TreeItem.new(:partial_name, :arguments)
+      def _eval(context)
+        hash = Hash[arguments.map { |arg| arg.values.map(&:to_s) }]
+        context.get_partial(partial_name.to_s).call hash
+      end
+    end
+
     class Block < TreeItem.new(:items)
       def _eval(context)
         items.map {|item| item._eval(context)}.join()
@@ -161,6 +168,13 @@ module Handlebars
       else_block_items: subtree(:else_block_items)
     ) {
       Tree::AsHelper.new(name, parameters, as_parameters, block_items, else_block_items)
+    }
+    
+    rule(
+      partial_name: simple(:partial_name),
+      arguments: subtree(:arguments)
+    ) {
+      Tree::PartialWithArgs.new(partial_name, arguments)
     }
 
     rule(partial_name: simple(:partial_name)) {Tree::Partial.new(partial_name)}
