@@ -11,6 +11,7 @@ module Handlebars
     rule(:ocurly)      { str('{')}
     rule(:ccurly)      { str('}')}
     rule(:pipe)        { str('|')}
+    rule(:eq)          { str('=')}
 
 
     rule(:docurly)     { ocurly >> ocurly }
@@ -49,6 +50,9 @@ module Handlebars
       )
     }
     rule(:parameters)  { parameter >> (space >> parameter).repeat }
+
+    rule(:argument)    { identifier.as(:key) >> space? >> eq >> space? >> string }
+    rule(:arguments)   { argument >> (space >> argument).repeat }
 
     rule(:unsafe_helper) { docurly >> space? >> identifier.as(:unsafe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly }
     rule(:safe_helper) { tocurly >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> tccurly }
@@ -97,6 +101,8 @@ module Handlebars
       gt >>
       space? >>
       identifier.as(:partial_name) >>
+      space? >>
+      arguments.as(:arguments).maybe >>
       space? >>
       dccurly
     }
