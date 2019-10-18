@@ -4,7 +4,7 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
- - Nothing done yet
+ - Add parameters for partials ([[#19](https://github.com/vincent-psarga/ruby-handlebars/pull/19] - [@d316])
 
 [0.3.0] (2019/10/11)
 --------------------
@@ -45,6 +45,7 @@ ruby-handlebars changelog
 [@stewartmckee]:  https://github.com/stewartmckee
 [@schuetzm]:      https://github.com/schuetzm
 [@mvz]:           https://github.com/mvz
+[@d316]:          https://github.com/d316
 
 <!-- Releases diffs -->
 [Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.3.0...master
