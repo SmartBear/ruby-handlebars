@@ -80,7 +80,7 @@ module Handlebars
 
     class PartialWithArgs < TreeItem.new(:partial_name, :arguments)
       def _eval(context)
-        hash = Hash[arguments.map(&:values).map do |vals| 
+        hash = Hash[[arguments].flatten.map(&:values).map do |vals| 
           [vals.first.to_s, vals.last._eval(context)]
         end]
         context.get_partial(partial_name.to_s).call hash
