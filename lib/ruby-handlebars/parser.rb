@@ -23,6 +23,7 @@ module Handlebars
     rule(:as_kw)       { str('as') }
 
     rule(:identifier)  { (else_kw >> space? >> dccurly).absent? >> match['@\-a-zA-Z0-9_\?'].repeat(1) }
+    rule(:directory)   { (else_kw >> space? >> dccurly).absent? >> match['@\-a-zA-Z0-9_\/\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> (identifier | else_kw)).repeat }
 
     rule(:nocurly)     { match('[^{}]') }
@@ -100,7 +101,7 @@ module Handlebars
       docurly >>
       gt >>
       space? >>
-      identifier.as(:partial_name) >>
+      directory.as(:partial_name) >>
       space? >>
       arguments.as(:arguments).maybe >>
       space? >>

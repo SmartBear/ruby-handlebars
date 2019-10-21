@@ -57,6 +57,16 @@ describe Handlebars::Handlebars do
         expect(evaluate("Hello {{> plic}}")).to eq("Hello Plic")
       end
 
+      it 'using a name with a slash' do
+        hbs.register_partial('parent/plic', "Plic")
+        expect(evaluate("Hello {{> parent/plic}}")).to eq("Hello Plic")
+      end
+
+      it 'using a name that begins with a slash' do
+        hbs.register_partial('/parent/plic', "Plic")
+        expect(evaluate("Hello {{> /parent/plic}}")).to eq("Hello Plic")
+      end
+
       it 'using context' do
         hbs.register_partial('brackets', "[{{name}}]")
         expect(evaluate("Hello {{> brackets}}", {name: 'world'})).to eq("Hello [world]")
