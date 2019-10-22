@@ -41,6 +41,13 @@ hbs.compile("Hello {{> full_name}}").call({person: {first_name: 'Pinkie', last_n
 # Gives: "Hello Pinkie Pie"
 ```
 
+Partials support parameters:
+```ruby
+hbs.register_partial('full_name', "{{fname}} {{lname}}")
+hbs.compile("Hello {{> full_name fname='jon' lname='doe'}}")
+# Gives: "Hello jon doe")
+```
+
 You can also register inline helpers:
 
 ```ruby
