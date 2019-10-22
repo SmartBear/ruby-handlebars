@@ -1,8 +1,8 @@
 ruby-handlebars changelog
 =========================
 
-[Unreleased]
-------------
+[0.4.0] (2019/10/22)
+--------------------
 
  - Allow slash character in partial names ([#18](https://github.com/SmartBear/ruby-handlebars/pull/18) - [@d316])
  - Add parameters for partials ([#19](https://github.com/SmartBear/ruby-handlebars/pull/19) [#20](https://github.com/SmartBear/ruby-handlebars/pull/20) - [@d316])
@@ -49,7 +49,7 @@ ruby-handlebars changelog
 [@d316]:          https://github.com/d316
 
 <!-- Releases diffs -->
-[Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.3.0...master
+[0.4.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.3.0...v0.4.0
 [0.3.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.1...v0.3.0
 [0.2.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.0...v0.2.1
 [0.2.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.1.1...v0.2.0
