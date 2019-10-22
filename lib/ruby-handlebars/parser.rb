@@ -52,7 +52,7 @@ module Handlebars
     }
     rule(:parameters)  { parameter >> (space >> parameter).repeat }
 
-    rule(:argument)    { identifier.as(:key) >> space? >> eq >> space? >> string }
+    rule(:argument)    { identifier.as(:key) >> space? >> eq >> space? >> parameter.as(:value) }
     rule(:arguments)   { argument >> (space >> argument).repeat }
 
     rule(:unsafe_helper) { docurly >> space? >> identifier.as(:unsafe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> dccurly }
