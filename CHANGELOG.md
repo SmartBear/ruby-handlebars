@@ -4,7 +4,8 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
- - Add parameters for partials ([#19](https://github.com/vincent-psarga/ruby-handlebars/pull/19) - [@d316])
+ - Allow slash character in partial names ([#18](https://github.com/vincent-psarga/ruby-handlebars/pull/18) - [@d316])
+ - Add parameters for partials ([#19](https://github.com/vincent-psarga/ruby-handlebars/pull/19) [#20](https://github.com/vincent-psarga/ruby-handlebars/pull/20) - [@d316])
 
 [0.3.0] (2019/10/11)
 --------------------
