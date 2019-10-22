@@ -1,6 +1,11 @@
 ruby-handlebars changelog
 =========================
 
+[Unreleased]
+------------
+
+ - Nothing changed yet
+
 [0.4.0] (2019/10/22)
 --------------------
 
@@ -49,6 +54,7 @@ ruby-handlebars changelog
 [@d316]:          https://github.com/d316
 
 <!-- Releases diffs -->
+[Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.4.0...master
 [0.4.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.3.0...v0.4.0
 [0.3.0]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.1...v0.3.0
 [0.2.1]:      https://github.com/smartbear/ruby-handlebars/compare/v0.2.0...v0.2.1
