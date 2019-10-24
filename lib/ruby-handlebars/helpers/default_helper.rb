@@ -24,5 +24,20 @@ module Handlebars
       #   # Do things and stuffa, but with 'as |param| notation'
       # end
     end
+
+    class BooleanHelper < DefaultHelper
+      # Helper that simply return "true" or ""
+
+      def self.apply(context, item1, item2, block = nil, else_block = nil)
+        self.cmp(item1, item2) ? 'true' : ''
+      rescue Exception => err
+        ''
+      end
+
+      # To be implemented by sub-classes
+      # def self.cmp(item1, item2)
+      #   do a boolean comparison on item1 and item2
+      # end
+    end
   end
 end

@@ -1,14 +1,14 @@
+require_relative 'default_helper'
+
 module Handlebars
   module Helpers
-    class EqHelper < DefaultHelper
+    class EqHelper < BooleanHelper
       def self.registry_name
         'eq'
       end
 
-      def self.apply(context, item1, item2, block = nil, else_block = nil)
-        item1 == item2 ? 'true' : ''
-      rescue Exception => err
-        ''
+      def self.cmp(item1, item2)
+        item1 == item2
       end
     end
   end
