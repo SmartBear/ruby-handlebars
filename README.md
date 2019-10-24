@@ -45,7 +45,7 @@ Partials support parameters:
 ```ruby
 hbs.register_partial('full_name', "{{fname}} {{lname}}")
 hbs.compile("Hello {{> full_name fname='jon' lname='doe'}}")
-# Gives: "Hello jon doe")
+# Gives: "Hello jon doe"
 ```
 
 You can also register inline helpers:
