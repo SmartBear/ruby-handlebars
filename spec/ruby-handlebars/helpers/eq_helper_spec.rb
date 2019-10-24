@@ -25,16 +25,6 @@ describe Handlebars::Helpers::EqHelper do
       expect(subject.apply(hbs, 123, "456")).to eq('')
     end
 
-    it 'returns an empty string when comparison raises an exception' do
-      class BadStuff
-        def == second
-          raise "Nope !"
-        end
-      end
-
-      expect(subject.apply(hbs, BadStuff.new, "456")).to eq('')
-    end
-
     it 'not not takes the blocks into account' do
       subject.apply(hbs, 123, 123, block, else_block)
       subject.apply(hbs, 123, 456, block, else_block)
