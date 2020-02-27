@@ -58,7 +58,7 @@ GEM
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
     psych (3.0.3)
-    rack (2.0.6)
+    rack (2.2.2)
     rake (12.3.2)
     rdoc (6.0.4)
     rspec (3.8.0)
