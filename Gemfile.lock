@@ -59,7 +59,7 @@ GEM
       pry (>= 0.9.11)
     psych (3.0.3)
     rack (2.2.2)
-    rake (12.3.2)
+    rake (13.0.1)
     rdoc (6.0.4)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
