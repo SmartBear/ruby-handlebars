@@ -4,7 +4,7 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
- - Nothing changed yet
+ - Faster parsing ([#26](https://github.com/SmartBear/ruby-handlebars/pull/26) - [@mvz])
 
 [0.4.0] (2019/10/22)
 --------------------
