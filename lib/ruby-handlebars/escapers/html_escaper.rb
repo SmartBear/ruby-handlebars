@@ -1,3 +1,5 @@
+require 'cgi'
+
 module Handlebars
   module Escapers
     class HTMLEscaper
