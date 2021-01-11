@@ -4,6 +4,7 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
+ - use separate context for each template evaluation ([#33](https://github.com/SmartBear/ruby-handlebars/pull/33) [@mvz])
  - added `with`helper ([#28](https://github.com/SmartBear/ruby-handlebars/pull/28) [@creature])
  - Faster parsing ([#26](https://github.com/SmartBear/ruby-handlebars/pull/26) - [@mvz])
 
