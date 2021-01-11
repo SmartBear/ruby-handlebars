@@ -4,6 +4,7 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
+ - added `with`helper ([#28](https://github.com/SmartBear/ruby-handlebars/pull/28) [@creature])
  - Faster parsing ([#26](https://github.com/SmartBear/ruby-handlebars/pull/26) - [@mvz])
 
 [0.4.0] (2019/10/22)
@@ -52,6 +53,7 @@ ruby-handlebars changelog
 [@schuetzm]:      https://github.com/schuetzm
 [@mvz]:           https://github.com/mvz
 [@d316]:          https://github.com/d316
+[@creature]:      https://github.com/creature
 
 <!-- Releases diffs -->
 [Unreleased]: https://github.com/smartbear/ruby-handlebars/compare/v0.4.0...master
