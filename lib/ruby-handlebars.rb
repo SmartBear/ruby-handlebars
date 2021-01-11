@@ -7,7 +7,6 @@ require_relative 'ruby-handlebars/escapers/html_escaper'
 
 module Handlebars
   class Handlebars
-    include Context
     attr_reader :escaper
 
     def initialize()
@@ -44,10 +43,6 @@ module Handlebars
 
     def get_partial(name)
       @partials[name.to_s]
-    end
-
-    def set_context(ctx)
-      @data = ctx
     end
 
     def set_escaper(escaper = nil)

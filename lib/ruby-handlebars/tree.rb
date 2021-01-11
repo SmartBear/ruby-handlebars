@@ -74,7 +74,7 @@ module Handlebars
 
     class Partial < TreeItem.new(:partial_name)
       def _eval(context)
-        context.get_partial(partial_name.to_s).call
+        context.get_partial(partial_name.to_s).call_with_context(context)
       end
     end
 
@@ -83,7 +83,7 @@ module Handlebars
         [arguments].flatten.map(&:values).map do |vals| 
           context.add_item vals.first.to_s, vals.last._eval(context)
         end
-        context.get_partial(partial_name.to_s).call
+        context.get_partial(partial_name.to_s).call_with_context(context)
       end
     end
 
