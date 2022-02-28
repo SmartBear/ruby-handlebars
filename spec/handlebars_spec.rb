@@ -51,6 +51,11 @@ describe Handlebars::Handlebars do
       expect(evaluate('Hello {{first-name}}', double("first-name": 'world'))).to eq('Hello world')
     end
 
+    it 'handles integer parameters' do
+      hbs.register_helper(:add){|context, a, b| a + b}
+      expect(evaluate('The sum is: {{add base_value 9}}', double("base_value": 2))).to eq('The sum is: 11')
+    end
+
     context 'partials' do
       it 'simple' do
         hbs.register_partial('plic', "Plic")
