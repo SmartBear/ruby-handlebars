@@ -74,7 +74,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    parslet (1.8.2)
+    parslet (2.0.0)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -119,7 +119,7 @@ PLATFORMS
 
 DEPENDENCIES
   juwelier (~> 2.4)
-  parslet (~> 1.6, >= 1.6.2)
+  parslet (~> 2.0, >= 2.0.0)
   pry (~> 0.10, >= 0.10.1)
   pry-stack_explorer (~> 0.4, >= 0.4.9.1)
   rspec (~> 3.1, >= 3.1.0)
