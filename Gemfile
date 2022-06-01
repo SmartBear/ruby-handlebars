@@ -7,7 +7,7 @@ group :development do
   gem 'pry-stack_explorer', '~>0.4', '>= 0.4.9.1'
   gem 'rspec', '~> 3.1', '>= 3.1.0'
   gem 'rspec-mocks', '~> 3.1', '>= 3.1.3'
-  gem 'jeweler', '~> 2.0', '>= 2.0.1'
+  gem 'juwelier', '~> 2.4'
 end
 
 group :test do

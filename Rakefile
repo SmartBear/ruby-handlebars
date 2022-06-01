@@ -9,10 +9,10 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'rake'
 
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
+require 'rake'
+require 'juwelier'
+Juwelier::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
   gem.name = "ruby-handlebars"
   gem.homepage = "https://github.com/smartbear/ruby-handlebars"
@@ -24,5 +24,4 @@ Jeweler::Tasks.new do |gem|
   gem.files = `git ls-files -- lib/*`.split("\n")
   gem.require_path = "lib"
 end
-Jeweler::RubygemsDotOrgTasks.new
-
+Juwelier::RubygemsDotOrgTasks.new
