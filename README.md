@@ -1,7 +1,7 @@
 ruby-handlebars
 ===============
 
-[![Build Status](https://travis-ci.org/SmartBear/ruby-handlebars.svg?branch=master)](https://travis-ci.org/SmartBear/ruby-handlebars)
+[![Build status](https://github.com/SmartBear/ruby-handlebars/actions/workflows/ci.yml/badge.svg)](https://github.com/SmartBear/ruby-handlebars/actions/workflows/ci.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/22dbe81de487cb27097c/maintainability)](https://codeclimate.com/github/SmartBear/ruby-handlebars/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/22dbe81de487cb27097c/test_coverage)](https://codeclimate.com/github/SmartBear/ruby-handlebars/test_coverage)
 
