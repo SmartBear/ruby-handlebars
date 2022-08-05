@@ -155,6 +155,22 @@ describe Handlebars::Parser do
         })
       end
 
+      it 'with integer parameters' do
+        result = parser.parse('{{ add 5 192 }}')
+        expect(result).to eq({
+          block_items: [
+            {
+              unsafe_helper_name: "add",
+              parameters: [
+                {parameter_name: {integer_content:   '5'}},
+                {parameter_name: {integer_content: '192'}}
+              ]
+            }
+          ]
+        })
+
+      end
+
       it 'block' do
         expect(parser.parse('{{#capitalize}}plic{{/capitalize}}')).to eq({
           block_items: [

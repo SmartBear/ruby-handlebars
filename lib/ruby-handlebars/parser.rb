@@ -42,11 +42,13 @@ module Handlebars
     rule(:sq_string)   { match("'") >> match("[^']").repeat.maybe.as(:str_content) >> match("'") }
     rule(:dq_string)   { match('"') >> match('[^"]').repeat.maybe.as(:str_content) >> match('"') }
     rule(:string)      { sq_string | dq_string }
+    rule(:digit) { match('[0-9]') }
+    rule(:integer) { digit.repeat(1).as(:integer_content) }
 
     rule(:parameter)   {
       (as_kw >> space? >> pipe).absent? >>
       (
-        (path | string).as(:parameter_name) |
+        (integer | path | string).as(:parameter_name) |
         (str('(') >> space? >> identifier.as(:safe_helper_name) >> (space? >> parameters.as(:parameters)).maybe >> space? >> str(')'))
       )
     }

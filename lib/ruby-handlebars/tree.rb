@@ -34,6 +34,12 @@ module Handlebars
       end
     end
 
+    class Integer < TreeItem.new(:content)
+      def _eval(context)
+        return content.to_i
+      end
+    end
+
     class Parameter < TreeItem.new(:name)
       def _eval(context)
         if name.is_a?(Parslet::Slice)
@@ -105,6 +111,7 @@ module Handlebars
     rule(replaced_unsafe_item: simple(:item)) {Tree::EscapedReplacement.new(item)}
     rule(replaced_safe_item: simple(:item)) {Tree::Replacement.new(item)}
     rule(str_content: simple(:content)) {Tree::String.new(content)}
+    rule(integer_content: simple(:content)) {Tree::Integer.new(content)}
     rule(parameter_name: simple(:name)) {Tree::Parameter.new(name)}
 
     rule(
@@ -171,7 +178,7 @@ module Handlebars
     ) {
       Tree::AsHelper.new(name, parameters, as_parameters, block_items, else_block_items)
     }
-    
+
     rule(
       partial_name: simple(:partial_name),
       arguments: subtree(:arguments)
