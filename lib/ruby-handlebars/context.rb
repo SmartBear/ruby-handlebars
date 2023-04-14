@@ -1,8 +1,12 @@
 module Handlebars
   class Context
-    def initialize(hbs, data)
+    class AttributeNotFoundError < StandardError
+    end
+
+    def initialize(hbs, data, **options)
       @hbs = hbs
       @data = data
+      @options = options || {}
     end
 
     def get(path)
@@ -75,6 +79,8 @@ module Handlebars
       if item.respond_to?(sym_attr)
         return item.send(sym_attr)
       end
+
+      raise AttributeNotFoundError.new("\"#{attribute}\" not found in #{item}") if @options[:strict]
     end
   end
 end
