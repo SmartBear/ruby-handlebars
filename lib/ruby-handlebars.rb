@@ -17,8 +17,8 @@ module Handlebars
       set_escaper
     end
 
-    def compile(template)
-      Template.new(self, template_to_ast(template))
+    def compile(template, **options)
+      Template.new(self, template_to_ast(template), **options)
     end
 
     def register_helper(name, &fn)

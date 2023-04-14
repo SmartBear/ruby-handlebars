@@ -2,13 +2,14 @@ require_relative 'context'
 
 module Handlebars
   class Template
-    def initialize(hbs, ast)
+    def initialize(hbs, ast, **options)
       @hbs = hbs
       @ast = ast
+      @options = options || {}
     end
 
     def call(args = nil)
-      ctx = Context.new(@hbs, args)
+      ctx = Context.new(@hbs, args, **@options)
 
       @ast.eval(ctx)
     end
