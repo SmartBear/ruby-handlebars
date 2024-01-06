@@ -11,10 +11,9 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Vincent Pretre".freeze, "Hiptest R&D".freeze]
-  s.date = "2022-06-01"
+  s.date = "2024-01-06"
   s.email = "v.pretre@hiptest.net".freeze
   s.extra_rdoc_files = [
-    "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ]
@@ -36,7 +35,7 @@ Gem::Specification.new do |s|
     "lib/ruby-handlebars/tree.rb"
   ]
   s.homepage = "https://github.com/smartbear/ruby-handlebars".freeze
-  s.rubygems_version = "3.1.6".freeze
+  s.rubygems_version = "3.2.33".freeze
   s.summary = "Pure Ruby library for Handlebars templates".freeze
 
   if s.respond_to? :specification_version then
@@ -44,14 +43,14 @@ Gem::Specification.new do |s|
   end
 
   if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<parslet>.freeze, ["~> 1.6", ">= 1.6.2"])
+    s.add_runtime_dependency(%q<parslet>.freeze, ["~> 2.0", ">= 2.0.0"])
     s.add_development_dependency(%q<pry>.freeze, ["~> 0.10", ">= 0.10.1"])
     s.add_development_dependency(%q<pry-stack_explorer>.freeze, ["~> 0.4", ">= 0.4.9.1"])
     s.add_development_dependency(%q<rspec>.freeze, ["~> 3.1", ">= 3.1.0"])
     s.add_development_dependency(%q<rspec-mocks>.freeze, ["~> 3.1", ">= 3.1.3"])
     s.add_development_dependency(%q<juwelier>.freeze, ["~> 2.4"])
   else
-    s.add_dependency(%q<parslet>.freeze, ["~> 1.6", ">= 1.6.2"])
+    s.add_dependency(%q<parslet>.freeze, ["~> 2.0", ">= 2.0.0"])
     s.add_dependency(%q<pry>.freeze, ["~> 0.10", ">= 0.10.1"])
     s.add_dependency(%q<pry-stack_explorer>.freeze, ["~> 0.4", ">= 0.4.9.1"])
     s.add_dependency(%q<rspec>.freeze, ["~> 3.1", ">= 3.1.0"])
