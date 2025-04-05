@@ -4,6 +4,10 @@ ruby-handlebars changelog
 [Unreleased]
 ------------
 
+[0.4.2] (2025/04/05)
+--------------------
+
+- Accept {} (empty curly) as a non-expression. Due to the problem with 'NREUM={}'
 
 [0.4.1] (2022/06/01)
 --------------------
