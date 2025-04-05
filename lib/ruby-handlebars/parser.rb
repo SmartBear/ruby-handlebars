@@ -26,7 +26,8 @@ module Handlebars
     rule(:directory)   { (else_kw >> space? >> dccurly).absent? >> match['@\-a-zA-Z0-9_\/\?'].repeat(1) }
     rule(:path)        { identifier >> (dot >> (identifier | else_kw)).repeat }
 
-    rule(:nocurly)     { match('[^{}]') }
+    # Take into account empty curly braces as a valid sequence of non-curlies
+    rule(:nocurly)     { match('[^{}]|\{\s*\}') }
     rule(:eof)         { any.absent? }
     rule(:template_content) {
       (
